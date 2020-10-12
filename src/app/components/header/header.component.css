@@ -1,0 +1,10 @@
+.active {
+    border: 2px solid white;
+    border-radius: 16px;
+}
+.navbar-toggler:active {
+    outline: none;
+}
+.navbar-toggler:focus {
+    outline: none;
+}
