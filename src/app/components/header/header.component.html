@@ -6,15 +6,15 @@
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item  px-2">
-          <a class="nav-link pr-1" routerLinkActive = "active" routerLink="/" style="text-align: right;">Search</a>
+        <li class="nav-item pr-2">
+          <a class="nav-link px-2" routerLinkActive = "active" [routerLinkActiveOptions]="{ exact: true }" routerLink="/" style="text-align: right;">Search</a>
         </li>
-        <li class="nav-item px-2 ">
-          <a class="nav-link pr-1" routerLinkActive = "active" routerLink="/watchlist" style="text-align: right;">Watchlist</a>
+        <li class="nav-item pr-2">
+          <a class="nav-link px-2" routerLinkActive = "active" routerLink="/watchlist" style="text-align: right;">Watchlist</a>
         </li>
-        <li class="nav-item px-2 ">
-            <a class="nav-link pr-1" routerLinkActive = "active" routerLink="/portfolio" style="text-align: right;">Portfolio</a>
-          </li>
+        <li class="nav-item pr-2">
+            <a class="nav-link px-2" style='padding-left: 8px; padding-right: 8px;' routerLinkActive = "active" routerLink="/portfolio" style="text-align: right;">Portfolio</a>
+        </li>
       </ul>
     </div>
 </nav>

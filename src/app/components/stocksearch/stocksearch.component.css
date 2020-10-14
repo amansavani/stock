@@ -1,0 +1,27 @@
+#s-bar {
+    border: 2px solid rgb(105,84,242);
+    border-radius: 20px;
+    width:300px;
+    display: inline;
+}
+#s-bar:focus{
+    outline: none;
+}
+#s-bar:active{
+    outline: none;
+}
+.form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: inline;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: rgb(105,84,242);
+    margin-left: -50px;
+}
+.form-control {
+    padding-left: 2.375rem;
+}
