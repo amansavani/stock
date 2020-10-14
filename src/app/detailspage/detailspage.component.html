@@ -1,0 +1,18 @@
+<div class="container" *ngIf="metadataObj">
+    <div class="d-flex flex-row justify-content-between mt-3 mx-3">
+        <div>
+            <span><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons">star_border</i></h2></span>
+            <h3 style="color: grey;">{{metadataObj.name}}</h3>
+            <p>{{metadataObj.exchangeCode}}</p>
+            <button type="button" class="btn btn-success">Buy</button>
+        </div>
+        <div [ngStyle]="{color:change>=0 ? 'green' : 'red'}" class="text-right">
+            <h2>{{dailypriceObj.last}}</h2>
+            <div *ngIf="change>=0; else downMarket"><h3><i *ngIf="change>0;" class="fa fa-caret-up"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
+            <ng-template #downMarket>
+                <div ><h3><i class="fa fa-caret-down"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
+            </ng-template>
+            <p style="color: grey;">{{timestamp}}</p>
+        </div>
+    </div>
+</div>

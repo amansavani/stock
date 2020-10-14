@@ -13,4 +13,13 @@ export class AutocompService {
     return this.http.get(_url+name);
   }
 
+  getMetaData(name:string){
+    var _url = 'http://localhost:3000/metadata?q=';
+    return this.http.get(_url+name);
+  }
+  getDailyPrice(name:string){
+    var _url = 'http://localhost:3000/dailyprice?q=';
+    return this.http.get(_url+name);
+  }
+
 }

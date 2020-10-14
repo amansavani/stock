@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AutocompService } from './services/autocomp.service';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { AppComponent } from './app.component';
@@ -15,6 +15,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { StocksearchComponent } from './components/stocksearch/stocksearch.component';
 import { WatchlistComponent } from './watchlist/watchlist.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
+import { DetailspageComponent } from './detailspage/detailspage.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
     FooterComponent,
     StocksearchComponent,
     WatchlistComponent,
-    PortfolioComponent
+    PortfolioComponent,
+    DetailspageComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,7 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
       },
       {
         path:'details/:tickername',
-        component: StocksearchComponent
+        component: DetailspageComponent
       },
     ])
   ],
