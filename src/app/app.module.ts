@@ -16,6 +16,8 @@ import { StocksearchComponent } from './components/stocksearch/stocksearch.compo
 import { WatchlistComponent } from './watchlist/watchlist.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DetailspageComponent } from './detailspage/detailspage.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { DetailspageComponent } from './detailspage/detailspage.component';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbModule,
     RouterModule.forChild([
       {
         path:'',
@@ -53,7 +56,8 @@ import { DetailspageComponent } from './detailspage/detailspage.component';
         path:'details/:tickername',
         component: DetailspageComponent
       },
-    ])
+    ]),
+    NgbModule
   ],
   providers: [AutocompService],
   bootstrap: [AppComponent]
