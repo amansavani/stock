@@ -1,56 +1,66 @@
 <div class="container" *ngIf="metadataObj">
     <div *ngIf="validStock; else nostockfound">
-    <div class="mt-3">
-        <p *ngFor="let alert of alerts">
-            <ngb-alert style="text-align: center;" [type]="alert.type" (close)="close(alert)">{{ alert.message }}</ngb-alert>
-        </p>
-    </div>
-    <div class="d-flex flex-row justify-content-between mt-3 mx-3">
-        <div>
-            <span *ngIf="isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons" style="color: yellow;">star</i></h2></span>
-            <span *ngIf="!isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons">star_outline</i></h2></span>
-            <h3 style="color: grey;">{{metadataObj.name}}</h3>
-            <p>{{metadataObj.exchangeCode}}</p>
+        <div class="mt-3">
+            <p *ngFor="let alert of alerts">
+                <ngb-alert style="text-align: center;" [type]="alert.type" (close)="close(alert)">{{ alert.message }}</ngb-alert>
+            </p>
+        </div>
+        <div class="d-flex flex-row justify-content-between mt-3 mx-3">
+            <div>
+                <span *ngIf="isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons" style="color: yellow;">star</i></h2></span>
+                <span *ngIf="!isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons">star_outline</i></h2></span>
+                <h3 style="color: grey;">{{metadataObj.name}}</h3>
+                <p>{{metadataObj.exchangeCode}}</p>
 
-            <ng-template #content let-modal>
-                <div class="modal-header">
-                  <p class="modal-title" id="modal-basic-title">{{metadataObj.ticker}}</p>
-                  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label>Current Price: {{dailypriceObj.last}}</label>
-                      <br>
-                      <label for="quantity">Quantity </label>
-                      <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" id="quantity" name="quantity" min="0"  (input)="calculateCost($event.target.value)">
+                <ng-template #content let-modal>
+                    <div class="modal-header">
+                    <p class="modal-title" id="modal-basic-title">{{metadataObj.ticker}}</p>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                     </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <span class="mr-auto"><label>Total: </label><span>{{totalPrice}}</span></span>  
-                  <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0'" (click)="buyStock();modal.close('Buy click')">Buy</button>
-                </div>
-              </ng-template>
+                    <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                        <label>Current Price: {{dailypriceObj.last}}</label>
+                        <br>
+                        <label for="quantity">Quantity </label>
+                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" id="quantity" name="quantity" min="0"  (input)="calculateCost($event.target.value)">
+                        </div>
+                    </form>
+                    </div>
+                    <div class="modal-footer">
+                    <span class="mr-auto"><label>Total: </label><span>{{totalPrice}}</span></span>  
+                    <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0'" (click)="buyStock();modal.close('Buy click')">Buy</button>
+                    </div>
+                </ng-template>
 
 
-            <button (click)="open(content)" type="button" class="btn btn-success">Buy</button>
+                <button (click)="open(content)" type="button" class="btn btn-success">Buy</button>
+            </div>
+            <div [ngStyle]="{color:change>=0 ? 'green' : 'red'}" class="text-right">
+                <h2>{{dailypriceObj.last}}</h2>
+                <div *ngIf="change>=0; else downMarket"><h3><i *ngIf="change>0;" class="fa fa-caret-up"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
+                <ng-template #downMarket>
+                    <div ><h3><i class="fa fa-caret-down"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
+                </ng-template>
+                <p style="color: grey;">{{timestamp}}</p>
+            </div>
         </div>
-        <div [ngStyle]="{color:change>=0 ? 'green' : 'red'}" class="text-right">
-            <h2>{{dailypriceObj.last}}</h2>
-            <div *ngIf="change>=0; else downMarket"><h3><i *ngIf="change>0;" class="fa fa-caret-up"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
-            <ng-template #downMarket>
-                <div ><h3><i class="fa fa-caret-down"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
-            </ng-template>
-            <p style="color: grey;">{{timestamp}}</p>
-        </div>
-    </div>
     <p *ngIf="marketOpen;else marketClose" class="mt-4 mx-auto" style="background-color:rgb(219,236,219);width: max-content;color:black">Market is Open</p>
     <ng-template #marketClose>
         <p class="mt-4 mx-auto" style="background-color:rgb(240,216,217);width: max-content;color:black">Market Closed on {{format}}</p>
     </ng-template>
+
+
+    <mat-tab-group mat-stretch-tabs class="example-stretched-tabs mt-5">
+        <mat-tab label="First"> Summary </mat-tab>
+        <mat-tab label="Second"> Top News </mat-tab>
+        <mat-tab label="Third"> Charts </mat-tab>
+    </mat-tab-group>
+
+
+
     </div>
 <!-- Stock found above -->
     <ng-template #nostockfound>

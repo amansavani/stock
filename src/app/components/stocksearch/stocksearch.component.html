@@ -14,7 +14,7 @@
                         [formControl]="control"
                         [matAutocomplete]="auto"
                         id='s-bar'>
-        <mat-autocomplete #auto="matAutocomplete">
+        <mat-autocomplete #auto="matAutocomplete" [panelWidth]="230">
             <mat-option *ngFor="let option of dataObj | async" [value]="option.ticker">
               {{option.ticker +" | "+option.name}}
             </mat-option>

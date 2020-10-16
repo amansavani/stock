@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+import {MatTabsModule} from '@angular/material/tabs';
 
 interface Alert {
   type: string;
@@ -143,7 +144,7 @@ export class DetailspageComponent implements OnInit {
     
     this._autocompservice.getMetaData(this.tickername).subscribe(data=>{
       this.metadataObj=data;
-      if(this.metadataObj["detail"]=="Not found."){
+      if(this.metadataObj["detail"]=="Not found." || this.tickername==""){
         this.validStock=false;
         this.alerts.unshift({type:"danger",message:"No results found. Please enter valid Ticker"});
         return;

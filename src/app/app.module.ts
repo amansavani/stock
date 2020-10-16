@@ -17,6 +17,7 @@ import { WatchlistComponent } from './watchlist/watchlist.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DetailspageComponent } from './detailspage/detailspage.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {MatTabsModule} from '@angular/material/tabs';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    MatTabsModule,
     MatInputModule,
     MatAutocompleteModule,
     BrowserAnimationsModule,

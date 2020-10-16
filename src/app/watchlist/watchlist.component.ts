@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
+interface Alert {
+  type: string;
+  message: string;
+}
+
 @Component({
   selector: 'app-watchlist',
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.css']
 })
 
-// interface Alert {
-//   type: string;
-//   message: string;
-// }
 
 export class WatchlistComponent implements OnInit {
 
