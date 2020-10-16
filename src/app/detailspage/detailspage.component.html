@@ -52,12 +52,42 @@
         <p class="mt-4 mx-auto" style="background-color:rgb(240,216,217);width: max-content;color:black">Market Closed on {{format}}</p>
     </ng-template>
 
-
-    <mat-tab-group mat-stretch-tabs class="example-stretched-tabs mt-5">
-        <mat-tab label="First"> Summary </mat-tab>
-        <mat-tab label="Second"> Top News </mat-tab>
-        <mat-tab label="Third"> Charts </mat-tab>
-    </mat-tab-group>
+    <div>
+        <mat-tab-group mat-stretch-tabs class="example-stretched-tabs mt-5">
+            <mat-tab label="Summary">
+                <div class="d-flex container justify-content-between mt-5 row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="d-flex justify-content-around" > 
+                            <div >
+                                <p>High Price:</p>
+                                <p>Low Price:</p>
+                                <p>Open Price:</p>
+                                <p>Prev. Close:</p>
+                                <p>Volume:</p>
+                            </div>
+                            <div *ngIf="marketOpen">
+                                <p>Mid Price:</p>
+                                <p>Ask Price:</p>
+                                <p>Ask Size:</p>
+                                <p>Bid Price:</p>
+                                <p>Bid Size:</p>
+                            </div>
+                        </div>
+                        <div class="mt-5"> 
+                            <h3 style="text-align: center;" class="mb-4">Company's Description</h3>
+                            <p>Start Date:</p>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam quasi nesciunt omnis commodi ut veniam tempora illum in esse dolorem maxime corrupti, vitae, laborum molestias repellat beatae, aliquid temporibus qui.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div id="summary-chart" style="height: 400px; min-width: 500px; width: 50%;">hello</div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Top News"> Top News </mat-tab>
+            <mat-tab label="Charts"> Charts </mat-tab>
+        </mat-tab-group>
+    </div>
 
 
 
