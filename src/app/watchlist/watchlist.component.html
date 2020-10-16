@@ -1,1 +1,11 @@
-<p>watchlist works!</p>
+<div class="container mt-5">
+    <h2>My Watchlist</h2>
+    <div *ngIf="watchListEmpty" class="mt-3">
+        <ngb-alert style="text-align: center;" [dismissible]="false" type="warning" >Currently you don't have any stock in your watchlist.</ngb-alert>
+    </div>
+    <div *ngIf="!watchListEmpty">
+        <p *ngFor="let ele of watchlist">
+            <li>{{ele}}</li>
+        </p>
+    </div>
+</div>

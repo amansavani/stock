@@ -30,7 +30,7 @@ export class DetailspageComponent implements OnInit {
   closeResult:string;
   isStarred:boolean=false;
   numStocks:number;
-
+  validStock:boolean;
   // alerts start
   
 
@@ -73,8 +73,33 @@ export class DetailspageComponent implements OnInit {
     this.alerts.unshift(new_alert);
     setTimeout(this.close.bind(this),3000,new_alert);
     console.log("must buy "+this.metadataObj["ticker"]+" at rate "+this.dailypriceObj["last"]+" quantity "+this.numStocks+" total cost "+this.totalPrice);
+    // let purchasedStockJson={}
+    // if(localStorage.getItem(this.metadataObj["ticker"])!=null){
+    //   purchasedStockJson = JSON.parse(localStorage.getItem(this.metadataObj["ticker"]));
+    // }
+    // purchasedStockJson["stockQuantity"]+=this.numStocks;
+    // purchasedStockJson["totalCost"]+=this.totalPrice;
+    // localStorage.setItem(this.metadataObj["ticker"],JSON.stringify(purchasedStockJson));
     
-    
+    let purchasedStockList = {};
+    if(localStorage.getItem("purchased")!=null){
+      purchasedStockList=JSON.parse(localStorage.getItem("purchased"));
+    }
+    let purchasedStockDetails={};
+    if(!purchasedStockList[this.metadataObj["ticker"]]){
+      purchasedStockDetails["stockQuantity"]=0;
+      purchasedStockDetails["totalCost"]=0;
+    }
+    else{
+      purchasedStockDetails=purchasedStockList[this.metadataObj["ticker"]];
+    }
+    purchasedStockDetails["stockQuantity"]=parseFloat(purchasedStockDetails["stockQuantity"])+ this.numStocks;
+    purchasedStockDetails["totalCost"]=parseFloat(purchasedStockDetails["totalCost"])+this.totalPrice;
+
+    purchasedStockList[this.metadataObj["ticker"]]=purchasedStockDetails;
+    localStorage.setItem("purchased",JSON.stringify(purchasedStockList));
+
+    console.log(localStorage);
     
     this.numStocks=0;
   }
@@ -87,22 +112,53 @@ export class DetailspageComponent implements OnInit {
     // this._success.pipe(
     //   debounceTime(5000)
     // ).subscribe(() => this.successMessage = '');
+    let watchlistString=localStorage.getItem("watchlist");
+    let watchlist=[];
+    if(watchlistString != null){
+      watchlist=JSON.parse(watchlistString);
+      }
+   
     let new_alert:Alert;
     if (this.isStarred){
       // alert:Alert = {type:"success",message:this.metadataObj["ticker"]+" added to Watchlist."};
+      
+      watchlist.push(this.metadataObj["ticker"]);
       new_alert={type:"success",message:this.metadataObj["ticker"]+" added to Watchlist."}
       
     }
     else{
+      if (watchlist.includes(this.metadataObj["ticker"])){
+        watchlist.splice(watchlist.indexOf(this.metadataObj["ticker"],1));
+      }
       new_alert={type:"danger",message:this.metadataObj["ticker"]+" removed from Watchlist."};
     }
+    localStorage.setItem("watchlist",JSON.stringify(watchlist));
     this.alerts.unshift(new_alert);
     setTimeout(this.close.bind(this),3000,new_alert);
-
+    console.log(watchlist);
     // must save data
   }
   ngOnInit(): void {
     this.tickername=this.route.snapshot.paramMap.get('tickername');
+    
+    this._autocompservice.getMetaData(this.tickername).subscribe(data=>{
+      this.metadataObj=data;
+      if(this.metadataObj["detail"]=="Not found."){
+        this.validStock=false;
+        this.alerts.unshift({type:"danger",message:"No results found. Please enter valid Ticker"});
+        return;
+      }
+      else{
+        this.validStock=true;
+      }
+      if (JSON.parse(localStorage.getItem("watchlist")).includes(this.metadataObj["ticker"])){
+        this.isStarred=true;
+      }
+      else{
+        this.isStarred=false;
+      }
+    });
+    
     this.dailypriceObj=this._autocompservice.getDailyPrice(this.tickername).subscribe(data=>{
       this.dailypriceObj=data;
       this.dailypriceObj=this.dailypriceObj[0];
@@ -117,9 +173,6 @@ export class DetailspageComponent implements OnInit {
         this.marketOpen=false;
       }
       
-    });
-    this._autocompservice.getMetaData(this.tickername).subscribe(data=>{
-      this.metadataObj=data;
     });
       
     
