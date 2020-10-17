@@ -1,4 +1,4 @@
-<div class="container" *ngIf="metadataObj">
+<div class="container mb-5" *ngIf="metadataObj">
     <div *ngIf="validStock; else nostockfound">
         <div class="mt-3">
             <p *ngFor="let alert of alerts">
@@ -59,28 +59,31 @@
                     <div class="col-md-6 col-sm-12">
                         <div class="d-flex justify-content-around" > 
                             <div >
-                                <p>High Price:</p>
-                                <p>Low Price:</p>
-                                <p>Open Price:</p>
-                                <p>Prev. Close:</p>
-                                <p>Volume:</p>
+                                <p>High Price: {{dailypriceObj.high}}</p>
+                                <p>Low Price: {{dailypriceObj.low}}</p>
+                                <p>Open Price: {{dailypriceObj.open}}</p>
+                                <p>Prev. Close: {{dailypriceObj.prevClose}}</p>
+                                <p>Volume: {{dailypriceObj.volume}}</p>
                             </div>
-                            <div *ngIf="marketOpen">
-                                <p>Mid Price:</p>
-                                <p>Ask Price:</p>
-                                <p>Ask Size:</p>
-                                <p>Bid Price:</p>
-                                <p>Bid Size:</p>
+                            <div>
+
+                                <div *ngIf="marketOpen">
+                                    <p>Mid Price: {{dailypriceObj.mid}}</p>
+                                    <p>Ask Price: {{dailypriceObj.askPrice}}</p>
+                                    <p>Ask Size: {{dailypriceObj.askSize}}</p>
+                                    <p>Bid Price: {{dailypriceObj.bidPrice}}</p>
+                                    <p>Bid Size: {{dailypriceObj.bidSize}}</p>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-5"> 
                             <h3 style="text-align: center;" class="mb-4">Company's Description</h3>
-                            <p>Start Date:</p>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam quasi nesciunt omnis commodi ut veniam tempora illum in esse dolorem maxime corrupti, vitae, laborum molestias repellat beatae, aliquid temporibus qui.</p>
+                            <p>Start Date: {{metadataObj.startDate}}</p>
+                            <p>{{metadataObj.description}}</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
-                        <div id="summary-chart" style="height: 400px; min-width: 500px; width: 50%;">hello</div>
+                        <div id="summary-chart" style="height: 400px; min-width: 400px; width: 50%;">hello</div>
                     </div>
                 </div>
             </mat-tab>

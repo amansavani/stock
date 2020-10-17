@@ -21,5 +21,15 @@ export class AutocompService {
     var _url = 'http://localhost:3000/dailyprice?q=';
     return this.http.get(_url+name);
   }
+  async getAsyncData(name:string){
+    var arr=[]
+    await this.getDailyPrice(name).toPromise().then(data=>{
+      arr.push(data[0]["last"]);
+      arr.push(data[0]["prevClose"]);
+    })
+    await this.getMetaData(name).toPromise().then(data=>arr.push(data["name"]))
+   
+    return arr
+  }
 
 }
