@@ -34,6 +34,8 @@ export class DetailspageComponent implements OnInit {
   validStock:boolean;
   newsDataObject:object;
   currentNews:object;
+  month:string[]=["null","January","February","March","April","May","June","July","August","September","October","November","December"];
+  
   // alerts start
   
 
@@ -74,37 +76,58 @@ export class DetailspageComponent implements OnInit {
   buyStock(){
     let new_alert:Alert={type:"success",message:this.metadataObj["ticker"]+" bought successfully!"};
     this.alerts.unshift(new_alert);
-    setTimeout(this.close.bind(this),3000,new_alert);
+    setTimeout(this.close.bind(this),5000,new_alert);
     console.log("must buy "+this.metadataObj["ticker"]+" at rate "+this.dailypriceObj["last"]+" quantity "+this.numStocks+" total cost "+this.totalPrice);
-    // let purchasedStockJson={}
-    // if(localStorage.getItem(this.metadataObj["ticker"])!=null){
-    //   purchasedStockJson = JSON.parse(localStorage.getItem(this.metadataObj["ticker"]));
-    // }
-    // purchasedStockJson["stockQuantity"]+=this.numStocks;
-    // purchasedStockJson["totalCost"]+=this.totalPrice;
-    // localStorage.setItem(this.metadataObj["ticker"],JSON.stringify(purchasedStockJson));
     
+    // let purchasedStockList = {};
+    // if(localStorage.getItem("purchased")!=null){
+    //   purchasedStockList=JSON.parse(localStorage.getItem("purchased"));
+    // }
+    // let purchasedStockDetails={};
+    // if(!purchasedStockList[this.metadataObj["ticker"]]){
+    //   purchasedStockDetails["stockQuantity"]=0;
+    //   purchasedStockDetails["totalCost"]=0;
+    // }
+    // else{
+    //   purchasedStockDetails=purchasedStockList[this.metadataObj["ticker"]];
+    // }
+    // purchasedStockDetails["stockQuantity"]=parseFloat(purchasedStockDetails["stockQuantity"])+ this.numStocks;
+    // purchasedStockDetails["totalCost"]=parseFloat(purchasedStockDetails["totalCost"])+this.totalPrice;
+
+    // purchasedStockList[this.metadataObj["ticker"]]=purchasedStockDetails;
+    // localStorage.setItem("purchased",JSON.stringify(purchasedStockList));
+
     let purchasedStockList = {};
     if(localStorage.getItem("purchased")!=null){
       purchasedStockList=JSON.parse(localStorage.getItem("purchased"));
     }
-    let purchasedStockDetails={};
-    if(!purchasedStockList[this.metadataObj["ticker"]]){
-      purchasedStockDetails["stockQuantity"]=0;
-      purchasedStockDetails["totalCost"]=0;
+    let purchasedStockDetails = {};
+    if(!purchasedStockList[this.metadataObj["ticker"]]){ // the ticker name does NOT exists in the list
+      purchasedStockList[this.metadataObj["ticker"]]={name:this.metadataObj["name"], stockQuantity:+this.numStocks, totalCost:+this.totalPrice, tickername:this.metadataObj["ticker"]};
     }
     else{
       purchasedStockDetails=purchasedStockList[this.metadataObj["ticker"]];
+      // purchasedStockDetails["stockQuantity"]=+parseFloat(purchasedStockDetails["stockQuantity"])+ +this.numStocks;
+      purchasedStockDetails["stockQuantity"]+= +this.numStocks;
+      // purchasedStockDetails["totalCost"]=+parseFloat(purchasedStockDetails["totalCost"])+ +this.totalPrice;
+      purchasedStockDetails["totalCost"]+= +this.totalPrice;
+      purchasedStockList[this.metadataObj["ticker"]]=purchasedStockDetails;
     }
-    purchasedStockDetails["stockQuantity"]=parseFloat(purchasedStockDetails["stockQuantity"])+ this.numStocks;
-    purchasedStockDetails["totalCost"]=parseFloat(purchasedStockDetails["totalCost"])+this.totalPrice;
-
-    purchasedStockList[this.metadataObj["ticker"]]=purchasedStockDetails;
     localStorage.setItem("purchased",JSON.stringify(purchasedStockList));
+    // localStorage.setItem("purchased",purchasedStockList.toString());
 
-    console.log(localStorage);
-    
     this.numStocks=0;
+  }
+
+  openNewsModal(newscontent,news){
+    this.currentNews=news;
+    let dateStringArray = this.currentNews["publishedAt"].split('T')[0].split('-');
+    this.currentNews["publishedAt"]=this.month[dateStringArray[1]].toString()+" "+dateStringArray[2]+", "+dateStringArray[0];
+    this.modalService.open(newscontent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
   }
 
   toggle(){
@@ -137,7 +160,7 @@ export class DetailspageComponent implements OnInit {
     }
     localStorage.setItem("watchlist",JSON.stringify(watchlist));
     this.alerts.unshift(new_alert);
-    setTimeout(this.close.bind(this),3000,new_alert);
+    setTimeout(this.close.bind(this),5000,new_alert);
     console.log(watchlist);
     // must save data
   }

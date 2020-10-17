@@ -1,1 +1,27 @@
-<p>portfolio works!</p>
+<div class="container mt-5 mb-5">
+    <h2 class="mb-5">My Portfolio</h2>
+    <div *ngIf="purchasedListEmpty" class="mt-3">
+        <ngb-alert style="text-align: center;" [dismissible]="false" type="warning" >Currently you don't have any stock.</ngb-alert>
+    </div>
+    <div *ngIf="!purchasedListEmpty">
+        <div *ngFor="let ele of purchasedSorted">
+            <div class="card w-100 mt-3" (click)="NavigateStock(ele);">
+                <div class="card-header">
+                    <h4 style="display: inline;" >{{ele.tickername}}</h4><p style="display: inline; color: grey;">   {{ele.name}}</p>
+                </div>
+
+
+                <div class="card-body pt-1 d-flex justify-content-between row">
+                    
+                </div>
+
+                
+                <div class="card-footer text-muted text-right">
+                    <button type="button" class="btn btn-primary mr-2">Buy</button>
+                    <button type="button" class="btn btn-danger ">Sell</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

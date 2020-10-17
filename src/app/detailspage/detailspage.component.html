@@ -88,9 +88,9 @@
                 </div>
             </mat-tab>
             <mat-tab label="Top News">
-                <div class="container">
+                <div class="container row d-flex">
                     <div *ngFor="let news of newsDataObject">
-                        <div class="card w-100 mt-3" (click)="openNewsModal(news)">
+                        <div class="card  col-md-6" (click)="openNewsModal(newscontent,news)">
                             <div class="card-body">
                               <!-- <h5 class="card-title">Card title</h5> -->
                               <img class="card-img" src='{{news.urlToImage}}' alt="Card image">
@@ -104,6 +104,30 @@
         </mat-tab-group>
     </div>
 
+
+    <ng-template #newscontent let-modal>
+        <div class="modal-header">
+        <div>
+            <h3 class="modal-title" id="modal-basic-title">{{currentNews.source.name}}</h3>
+            <p style="color: grey;">{{currentNews.publishedAt}}</p>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <h5>{{currentNews.title}}</h5>
+            <p>{{currentNews.description}}</p>
+            <p style="color: grey;">For more details click <a href="{{currentNews.url}}" target="_blank">here</a></p>
+        </div>
+        <div class="card  mx-3 my-3">
+            <div class="card-body">
+              <!-- <h5 class="card-title">Card title</h5> -->
+              <p>Share</p>
+              <div><i class="fa fa-twitter fa-3x" style="color: rgb(29, 161, 242);"></i><i class="fa fa-facebook-square fa-3x" style="color: rgb(66,103,178);"></i></div>
+            </div>
+        </div>
+    </ng-template>
 
 
     </div>
