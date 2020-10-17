@@ -32,6 +32,8 @@ export class DetailspageComponent implements OnInit {
   isStarred:boolean=false;
   numStocks:number;
   validStock:boolean;
+  newsDataObject:object;
+  currentNews:object;
   // alerts start
   
 
@@ -175,6 +177,9 @@ export class DetailspageComponent implements OnInit {
       }
       
     });
+
+    this._autocompservice.getNewsData(this.tickername).subscribe(data=>{this.newsDataObject=data;});
+    
       
     
   }

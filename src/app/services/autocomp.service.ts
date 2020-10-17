@@ -32,4 +32,10 @@ export class AutocompService {
     return arr
   }
 
+  getNewsData(name:string){
+    var _url = 'http://localhost:3000/news?q=';
+    return this.http.get(_url+name);
+
+  }
+
 }
