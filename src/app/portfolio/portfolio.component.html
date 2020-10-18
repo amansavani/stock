@@ -5,7 +5,7 @@
     </div>
     <div *ngIf="!purchasedListEmpty">
         <div *ngFor="let ele of purchasedSorted">
-            <div class="card w-100 mt-3" (click)="NavigateStock(ele);">
+            <div class="card w-100 mt-3" >
                 <div class="card-header">
                     <h4 style="display: inline;" >{{ele.tickername}}</h4><p style="display: inline; color: grey;">   {{ele.name}}</p>
                 </div>
@@ -15,13 +15,40 @@
                     
                 </div>
 
-                
+
                 <div class="card-footer text-muted text-right">
-                    <button type="button" class="btn btn-primary mr-2">Buy</button>
+                    <button type="button" class="btn btn-primary mr-2" (click)="open(content)">Buy</button>
                     <button type="button" class="btn btn-danger ">Sell</button>
                 </div>
             </div>
+            <!-- buy modal below -->
+            <ng-template #content let-modal> 
+                <div class="modal-header">
+                <p class="modal-title" id="modal-basic-title">{{ele.tickername}}</p>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Current Price: {{ele.last}}</label>
+                        <br>
+                        <label for="quantity">Quantity </label>
+                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" id="quantity" name="quantity" min="0"  (input)="calculateCost($event.target.value,ele)">
+                    </div>
+                </form>
+                </div>
+                <div class="modal-footer">
+                <span class="mr-auto"><label>Total: </label><span>{{totalPrice}}</span></span>  
+                <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0'" (click)="buyStock(ele);modal.close('Buy click')">Buy</button>
+                </div>
+            </ng-template>
+
+
         </div>
         
     </div>
+    
+
 </div>

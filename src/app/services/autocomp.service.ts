@@ -38,4 +38,10 @@ export class AutocompService {
 
   }
 
+  getMutlipleDailyPrice(names:string[]){
+    var _url = 'http://localhost:3000/dailyprice?q=';
+    names.join(',');
+    return this.http.get(_url+names.join(','));
+  }
+
 }
