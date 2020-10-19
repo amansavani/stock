@@ -122,7 +122,8 @@ export class DetailspageComponent implements OnInit {
   openNewsModal(newscontent,news){
     this.currentNews=news;
     let dateStringArray = this.currentNews["publishedAt"].split('T')[0].split('-');
-    this.currentNews["publishedAt"]=this.month[dateStringArray[1]].toString()+" "+dateStringArray[2]+", "+dateStringArray[0];
+    // console.log(dateStringArray)
+    this.currentNews["publishedAt"]=this.month[parseInt(dateStringArray[1])].toString()+" "+dateStringArray[2]+", "+dateStringArray[0];
     this.modalService.open(newscontent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

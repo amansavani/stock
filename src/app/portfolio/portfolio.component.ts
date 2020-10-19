@@ -58,9 +58,9 @@ export class PortfolioComponent implements OnInit {
     let index = this.purchasedSorted.indexOf(ele);
     this.purchasedSorted[index]["stockQuantity"]=purchasedStockDetails["stockQuantity"];
     this.purchasedSorted[index]["totalCost"]=purchasedStockDetails["totalCost"];
-    this.purchasedSorted[index]["avgCost"]=this.purchasedSorted[index]["totalCost"]/this.purchasedSorted[index]["stockQuantity"];;
-    this.purchasedSorted[index]["change"]=this.purchasedSorted[index]["last"] - this.purchasedSorted[index]["avgCost"];
-    this.purchasedSorted[index]["marketVal"] = this.purchasedSorted[index]["last"]*this.purchasedSorted[index]["stockQuantity"];
+    this.purchasedSorted[index]["avgCost"]=parseFloat((this.purchasedSorted[index]["totalCost"]/this.purchasedSorted[index]["stockQuantity"]).toFixed(2));
+    this.purchasedSorted[index]["change"]=parseFloat((this.purchasedSorted[index]["last"] - this.purchasedSorted[index]["avgCost"]).toFixed(2));
+    this.purchasedSorted[index]["marketVal"] = parseFloat((this.purchasedSorted[index]["last"]*this.purchasedSorted[index]["stockQuantity"]).toFixed(2));
 
     console.log(this.purchasedSorted[index]);
     console.log(this.purchasedSorted);
@@ -87,9 +87,9 @@ export class PortfolioComponent implements OnInit {
           for(let i=0;i<this.purchasedSorted.length;i++){
             this.purchasedSorted[i]["last"]= +this.dailyPrice[i]["last"];
             // this.purchasedSorted[i]["prevClose"]= +this.dailyPrice[i]["prevClose"];
-            this.purchasedSorted[i]["avgCost"]= this.purchasedSorted[i]["totalCost"]/this.purchasedSorted[i]["stockQuantity"]; 
-            this.purchasedSorted[i]["change"]=this.purchasedSorted[i]["last"] - this.purchasedSorted[i]["avgCost"];
-            this.purchasedSorted[i]["marketVal"] = this.purchasedSorted[i]["last"]*this.purchasedSorted[i]["stockQuantity"];
+            this.purchasedSorted[i]["avgCost"]= parseFloat((this.purchasedSorted[i]["totalCost"]/this.purchasedSorted[i]["stockQuantity"]).toFixed(2)); 
+            this.purchasedSorted[i]["change"]=parseFloat((this.purchasedSorted[i]["last"] - this.purchasedSorted[i]["avgCost"]).toFixed(2));
+            this.purchasedSorted[i]["marketVal"] = parseFloat((this.purchasedSorted[i]["last"]*this.purchasedSorted[i]["stockQuantity"]).toFixed(2));
           }
           console.log(this.purchasedSorted);
         }); 

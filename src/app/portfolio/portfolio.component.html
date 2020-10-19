@@ -11,8 +11,34 @@
                 </div>
 
 
-                <div class="card-body pt-1 d-flex justify-content-between row">
-                    
+                <div class="card-body pt-2 d-flex justify-content-between row pb-2">
+                    <div class="d-flex justify-content-between col-md-6" style="width: 100%;">
+                        <div>
+                            <div>Quantity:</div>
+                            <div>Avg. Cost/Share:</div>
+                            <div >Total Cost:</div>
+                        </div>
+                        <div class="text-right">
+                            <div>{{ele.stockQuantity}}</div>
+                            <div>{{ele.avgCost}}</div>
+                            <div>{{ele.totalCost}}</div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between col-md-6" style="width: 100%;">
+                        <div>
+                            <div>Change:</div>
+                            <div>Current Price:</div>
+                            <div>Market Value:</div>
+                        </div>
+                        <div [ngStyle]="{color:ele['change']>=0 ? ele['change']==0 ? 'black' : 'green' : 'red'}" class="text-right">
+                            <div *ngIf="ele['change']>=0; else downMarket"><i *ngIf="ele['change']>0;" class="fa fa-caret-up"></i> {{ele.change}}</div>
+                            <ng-template #downMarket>
+                                <div><i class="fa fa-caret-down"></i> {{ele.change}}</div>
+                            </ng-template>
+                            <div>{{ele.last}}</div>
+                            <div>{{ele.marketVal}}</div>
+                        </div>
+                    </div>
                 </div>
 
 
