@@ -51,7 +51,7 @@ export class DetailspageComponent implements OnInit {
 
   calculateCost(x){
     this.numStocks=x;
-    this.totalPrice=(x*this.dailypriceObj["last"].toFixed(2)).toString();
+    this.totalPrice=((x*this.dailypriceObj["last"]).toFixed(2)).toString();
     // console.log(this.totalPrice);
   }
   
@@ -65,6 +65,9 @@ export class DetailspageComponent implements OnInit {
   }
 
   private getDismissReason(reason: any): string {
+    
+      // this.totalPrice="0.00";
+    // this.numStocks=0;
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
