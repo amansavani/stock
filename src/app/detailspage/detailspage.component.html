@@ -116,13 +116,12 @@
                 </div>
             </mat-tab>
             <mat-tab label="Top News">
-                <div class="container row d-flex">
-                    <div *ngFor="let news of newsDataObject">
-                        <div class="card  col-md-6" (click)="openNewsModal(newscontent,news)">
-                            <div class="card-body">
-                              <!-- <h5 class="card-title">Card title</h5> -->
-                              <img class="card-img" src='{{news.urlToImage}}' alt="Card image">
-                              <p class="card-text">{{news.title}}</p>
+                <div class="container d-flex flex-wrap" style="width: 100%;" >
+                    <div *ngFor="let news of newsDataObject" class="col-lg-6 col-md-12">
+                        <div class="card bg-light h-100" (click)="openNewsModal(newscontent,news)" style="margin-bottom: 9px; ">
+                            <div class="card-body row" >
+                              <img class="card-img col-lg-3 col-md-12" src='{{news.urlToImage}}' alt="Card image" style="object-fit: cover; max-height: 90px;">
+                              <p style="width: 100%;" class="card-text col-lg-9 col-md-12">{{news.title}}</p>
                             </div>
                         </div>
                     </div>
@@ -137,7 +136,7 @@
         <div class="modal-header">
         <div>
             <h3 class="modal-title" id="modal-basic-title">{{currentNews.source.name}}</h3>
-            <p style="color: grey;">{{currentNews.publishedAt}}</p>
+            <p style="color: grey;">{{currentNews.publishedAtModified}}</p>
         </div>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>

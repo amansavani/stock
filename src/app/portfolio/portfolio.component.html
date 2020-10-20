@@ -6,7 +6,7 @@
     <div *ngIf="!purchasedListEmpty">
         <div *ngFor="let ele of purchasedSorted">
             <div class="card w-100 mt-3" >
-                <div class="card-header">
+                <div class="card-header" (click)="NavigateStock(ele)">
                     <h4 style="display: inline;" >{{ele.tickername}}</h4><p style="display: inline; color: grey;">   {{ele.name}}</p>
                 </div>
 

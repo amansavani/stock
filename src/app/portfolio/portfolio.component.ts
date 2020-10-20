@@ -29,6 +29,11 @@ export class PortfolioComponent implements OnInit {
     });
   }
 
+  NavigateStock(stock){
+    // console.log("hello");
+    this.router.navigate(['/details',stock["tickername"]]);
+  }
+
   private getDismissReason(reason: any): string {
     
       // this.totalPrice="0.00";

@@ -114,6 +114,7 @@ export class DetailspageComponent implements OnInit {
       purchasedStockDetails["stockQuantity"]+= +this.numStocks;
       // purchasedStockDetails["totalCost"]=+parseFloat(purchasedStockDetails["totalCost"])+ +this.totalPrice;
       purchasedStockDetails["totalCost"]+= +this.totalPrice;
+      purchasedStockDetails["totalCost"] = parseFloat(purchasedStockDetails["totalCost"].toFixed(2));
       purchasedStockList[this.metadataObj["ticker"]]=purchasedStockDetails;
     }
     localStorage.setItem("purchased",JSON.stringify(purchasedStockList));
@@ -126,7 +127,7 @@ export class DetailspageComponent implements OnInit {
     this.currentNews=news;
     let dateStringArray = this.currentNews["publishedAt"].split('T')[0].split('-');
     // console.log(dateStringArray)
-    this.currentNews["publishedAt"]=this.month[parseInt(dateStringArray[1])].toString()+" "+dateStringArray[2]+", "+dateStringArray[0];
+    this.currentNews["publishedAtModified"]=this.month[parseInt(dateStringArray[1])].toString()+" "+dateStringArray[2]+", "+dateStringArray[0];
     this.modalService.open(newscontent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
