@@ -22,6 +22,7 @@ export class PortfolioComponent implements OnInit {
   open(content) {
     // this.totalPrice="0.00";
     this.numStocks=0;
+    this.totalPrice="0.00";
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

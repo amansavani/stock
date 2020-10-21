@@ -1,6 +1,10 @@
 footer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     width: 100%;
     z-index: 1;
+    margin-top: 10px;
 }
+/* body, html{
+    min-height: 100%;
+} */

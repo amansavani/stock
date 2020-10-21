@@ -124,10 +124,12 @@ export class DetailspageComponent implements OnInit {
   }
 
   openNewsModal(newscontent,news){
+
     this.currentNews=news;
     let dateStringArray = this.currentNews["publishedAt"].split('T')[0].split('-');
     // console.log(dateStringArray)
     this.currentNews["publishedAtModified"]=this.month[parseInt(dateStringArray[1])].toString()+" "+dateStringArray[2]+", "+dateStringArray[0];
+    this.currentNews["twitterContent"]=this.currentNews["title"].replace(/ /g,"%20")+" "+this.currentNews["url"];
     this.modalService.open(newscontent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -205,11 +207,34 @@ export class DetailspageComponent implements OnInit {
       }
       
     });
+    // this.apiCall();
+    // setInterval(this.apiCall,5000);
 
     this._autocompservice.getNewsData(this.tickername).subscribe(data=>{this.newsDataObject=data;});
     
       
     
   }
+
+  // apiCall(){
+
+  //   this.dailypriceObj=this._autocompservice.getDailyPrice(this.tickername).subscribe(data=>{
+  //     this.dailypriceObj=data;
+  //     this.dailypriceObj=this.dailypriceObj[0];
+  //     this.change = parseFloat((this.dailypriceObj["last"] - this.dailypriceObj["prevClose"]).toFixed(2));
+  //     this.changePercent = parseFloat((this.change / this.dailypriceObj["prevClose"] *100).toFixed(2)); 
+  //     var date =new Date();
+  //     this.marketOpen=true;
+  //     this.timestamp=date.getFullYear() + "-" + String((date.getMonth() + 1)).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')+" "+String(date.getHours()).padStart(2,'0')+":"+String(date.getMinutes()).padStart(2,'0')+":"+String(date.getSeconds()).padStart(2,'0');
+  //     // console.log(this.changePercent);
+  //     if (this.dailypriceObj["bidPrice"]==null && this.dailypriceObj["bidSize"]==null && this.dailypriceObj["askSize"]==null && this.dailypriceObj["askPrice"]==null){
+  //       this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+this.dailypriceObj["timestamp"].slice(11,19)
+  //       this.marketOpen=false;
+  //     }
+  //     console.log(data);
+      
+  //   });
+    
+  // }
 
 }
