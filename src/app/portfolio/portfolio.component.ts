@@ -17,7 +17,8 @@ export class PortfolioComponent implements OnInit {
   totalPrice: string="0.00";
   closeResult:string;
   numStocks:number;
-  constructor(private _autocompservice:AutocompService, private router: Router, private modalService: NgbModal) { }
+  dataReady:boolean;
+  constructor(private _autocompservice:AutocompService, private router: Router, private modalService: NgbModal) { this.dataReady=false}
 
   open(content) {
     // this.totalPrice="0.00";
@@ -119,6 +120,7 @@ export class PortfolioComponent implements OnInit {
   ngOnInit(): void {
     if(localStorage.getItem("purchased")==null){
       this.purchasedListEmpty=true;
+      this.dataReady=true;
     }
     else{
       this.purchasedlist=JSON.parse(localStorage.getItem("purchased"));
@@ -149,15 +151,18 @@ export class PortfolioComponent implements OnInit {
             this.purchasedSorted[i]["marketVal"] = parseFloat((this.purchasedSorted[i]["last"]*this.purchasedSorted[i]["stockQuantity"]).toFixed(2));
           }
           console.log(this.purchasedSorted);
+          this.dataReady=true;
         }); 
         
 
       } 
       else{
         this.purchasedListEmpty=true;
+        this.dataReady=true;
       }
     }
     console.log(this.purchasedListEmpty)
+    
   }
   
 

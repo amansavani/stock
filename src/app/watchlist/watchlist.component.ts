@@ -29,6 +29,7 @@ export class WatchlistComponent implements OnInit {
     
     if(localStorage.getItem("watchlist")==null){
       this.watchListEmpty=true;
+      this.dataReady=true;
     }
     else{
       this.watchlist=JSON.parse(localStorage.getItem("watchlist"));
@@ -41,6 +42,7 @@ export class WatchlistComponent implements OnInit {
         
       else{
         this.watchListEmpty=true;
+        this.dataReady=true;
       }
     }
   }

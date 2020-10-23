@@ -1,9 +1,12 @@
 <div class="container mt-5 mb-5">
     <h2 class="mb-5">My Portfolio</h2>
-    <div *ngIf="purchasedListEmpty" class="mt-3">
+    <div *ngIf="!dataReady" class="mt-3">
+        <mat-spinner  style="margin: 0 auto;"></mat-spinner>
+    </div>
+    <div *ngIf="dataReady && purchasedListEmpty" class="mt-3">
         <ngb-alert style="text-align: center;" [dismissible]="false" type="warning" >Currently you don't have any stock.</ngb-alert>
     </div>
-    <div *ngIf="!purchasedListEmpty">
+    <div *ngIf="dataReady && !purchasedListEmpty">
         <div *ngFor="let ele of purchasedSorted">
             <div class="card w-100 mt-3" >
                 <div class="card-header" (click)="NavigateStock(ele)">
@@ -61,7 +64,7 @@
                         <label>Current Price: {{ele.last}}</label>
                         <br>
                         <label for="quantity">Quantity </label>
-                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" id="quantity" name="quantity" min="0"  (input)="calculateCost($event.target.value,ele)">
+                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" inputmode="numeric" type="number" id="quantity" name="quantity" min="0"  (input)="calculateCost($event.target.value,ele)">
                     </div>
                 </form>
                 </div>
@@ -84,7 +87,7 @@
                         <label>Current Price: {{ele.last}}</label>
                         <br>
                         <label for="quantity">Quantity </label>
-                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" id="quantity" name="quantity" min="0"  (input)="calculateCost($event.target.value,ele)">
+                        <input style="width:120px;border-radius: 5px;margin-left:5px; border-style: solid;" inputmode="numeric" type="number" id="quantity" name="quantity" min="0"  (input)="calculateCost($event.target.value,ele)">
                     </div>
                 </form>
                 </div>

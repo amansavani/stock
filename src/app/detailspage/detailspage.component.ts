@@ -6,6 +6,9 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import {MatTabsModule} from '@angular/material/tabs';
+import * as Highcharts from 'highcharts';
+import { Subscription, timer } from 'rxjs';
+import { switchMap, timeout } from 'rxjs/operators';
 
 interface Alert {
   type: string;
@@ -35,6 +38,8 @@ export class DetailspageComponent implements OnInit {
   newsDataObject:object;
   currentNews:object;
   month:string[]=["null","January","February","March","April","May","June","July","August","September","October","November","December"];
+  dataReady:boolean;
+  subscription: Subscription;
   
   // alerts start
   
@@ -171,6 +176,10 @@ export class DetailspageComponent implements OnInit {
     console.log(watchlist);
     // must save data
   }
+  // ngOnDestroy() {
+  //   this.subscription.unsubscribe();
+  // }
+
   ngOnInit(): void {
     this.tickername=this.route.snapshot.paramMap.get('tickername');
     
@@ -179,6 +188,7 @@ export class DetailspageComponent implements OnInit {
       if(this.metadataObj["detail"]=="Not found." || this.tickername==""){
         this.validStock=false;
         this.alerts.unshift({type:"danger",message:"No results found. Please enter valid Ticker"});
+        this.dataReady=true;
         return;
       }
       else{
@@ -191,8 +201,25 @@ export class DetailspageComponent implements OnInit {
         this.isStarred=false;
       }
     });
-    
-    this.dailypriceObj=this._autocompservice.getDailyPrice(this.tickername).subscribe(data=>{
+   
+    // this.dailypriceObj=this._autocompservice.getDailyPrice(this.tickername).subscribe(data=>{
+    //   this.dailypriceObj=data;
+    //   this.dailypriceObj=this.dailypriceObj[0];
+    //   this.change = parseFloat((this.dailypriceObj["last"] - this.dailypriceObj["prevClose"]).toFixed(2));
+    //   this.changePercent = parseFloat((this.change / this.dailypriceObj["prevClose"] *100).toFixed(2)); 
+    //   var date =new Date();
+    //   this.marketOpen=true;
+    //   this.timestamp=date.getFullYear() + "-" + String((date.getMonth() + 1)).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')+" "+String(date.getHours()).padStart(2,'0')+":"+String(date.getMinutes()).padStart(2,'0')+":"+String(date.getSeconds()).padStart(2,'0');
+    //   // console.log(this.changePercent);
+    //   if (this.dailypriceObj["bidPrice"]==null && this.dailypriceObj["bidSize"]==null && this.dailypriceObj["askSize"]==null && this.dailypriceObj["askPrice"]==null){
+    //     this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+this.dailypriceObj["timestamp"].slice(11,19)
+    //     this.marketOpen=false;
+    //   }
+    //   this.dataReady=true;
+      
+    // });
+
+  this.subscription=timer(0,15000).pipe(switchMap(()=>this._autocompservice.getDailyPrice(this.tickername))).subscribe(data=>{
       this.dailypriceObj=data;
       this.dailypriceObj=this.dailypriceObj[0];
       this.change = parseFloat((this.dailypriceObj["last"] - this.dailypriceObj["prevClose"]).toFixed(2));
@@ -205,14 +232,15 @@ export class DetailspageComponent implements OnInit {
         this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+this.dailypriceObj["timestamp"].slice(11,19)
         this.marketOpen=false;
       }
+      this.dataReady=true;
+      console.log("1");
       
     });
-    // this.apiCall();
-    // setInterval(this.apiCall,5000);
+
+
 
     this._autocompservice.getNewsData(this.tickername).subscribe(data=>{this.newsDataObject=data;});
     
-      
     
   }
 

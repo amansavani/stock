@@ -10,7 +10,9 @@ import {map, startWith} from 'rxjs/operators';
   templateUrl: './stocksearch.component.html',
   styleUrls: ['./stocksearch.component.css']
 })
+
 export class StocksearchComponent implements OnInit {
+  dataReady:boolean=true;
   inputTickerName:string ='';
   dataObj:object; //I think the service is returning a JSON and thats why we are storing the output in a object variable
   control = new FormControl();
@@ -22,7 +24,16 @@ export class StocksearchComponent implements OnInit {
     this.router.navigate(['/details',ticker]);
   }
   callApi(ticker:string){
+      if(!ticker){
+        return
+      }
+      this.dataReady=false;
       this.dataObj=this._autocompservice.getAutoCompData(ticker);
+      
+      // this._autocompservice.getAutoCompData(ticker).subscribe(data=>{
+      //   this.dataObj=data;
+      //   this.dataReady=true;
+      // });
   }
   ngOnInit(): void {
   }

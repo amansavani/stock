@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { Component, NgModule } from '@angular/core';
-import {RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,7 +18,8 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DetailspageComponent } from './detailspage/detailspage.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatTabsModule} from '@angular/material/tabs';
-
+import { HighchartsChartModule } from 'highcharts-angular';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    HighchartsChartModule,
+    MatProgressSpinnerModule,
     NgbModule,
     RouterModule.forChild([
       {

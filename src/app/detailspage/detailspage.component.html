@@ -1,5 +1,8 @@
+<div *ngIf="!dataReady" class="mt-3">
+    <mat-spinner  style="margin: 0 auto;"></mat-spinner>
+</div>
 <div class="container mb-5" *ngIf="metadataObj">
-    <div *ngIf="validStock; else nostockfound">
+    <div *ngIf="validStock && dataReady; else nostockfound">
         <div class="mt-3">
             <p *ngFor="let alert of alerts">
                 <ngb-alert style="text-align: center;" [type]="alert.type" (close)="close(alert)">{{ alert.message }}</ngb-alert>
@@ -25,7 +28,7 @@
                         <label>Current Price: {{dailypriceObj.last}}</label>
                         <br>
                         <label for="quantity">Quantity </label>
-                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" id="quantity" name="quantity" min="0" inputmode="numeric" (input)="calculateCost($event.target.value)">
+                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" inputmode="numeric" id="quantity" name="quantity" min="0" inputmode="numeric" (input)="calculateCost($event.target.value)">
                         </div>
                     </form>
                     </div>
@@ -176,7 +179,7 @@
     <ng-template #nostockfound>
         <div class="mt-3">
             <p *ngFor="let alert of alerts">
-                <ngb-alert style="text-align: center;" [type]="alert.type" (close)="close(alert)">{{ alert.message }}</ngb-alert>
+                <ngb-alert style="text-align: center;" [dismissible]="false" [type]="alert.type" (close)="close(alert)">{{ alert.message }}</ngb-alert>
             </p>
         </div>
     </ng-template>
