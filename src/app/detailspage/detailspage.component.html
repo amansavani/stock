@@ -114,7 +114,14 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
-                        <div id="summary-chart" style="height: 400px; min-width: 400px; width: 50%;">hello</div>
+                        <div id="summary-chart" style="height: 400px; min-width: 400px; width: 50%;">
+                            <highcharts-chart 
+                            [Highcharts]="DailyHighcharts"
+                            [options]="DailyChartOptions"
+                            
+                            style="width: 100%; display: block;"
+                            ></highcharts-chart>
+                        </div>
                     </div>
                 </div>
             </mat-tab>
@@ -132,7 +139,14 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Charts"> Charts </mat-tab>
+            <mat-tab label="Charts"> Charts 
+                <highcharts-chart 
+                    [Highcharts]="Highcharts"
+                    [options]="chartOptions"
+                    
+                    style="width: 100%; height: 400px; display: block;"
+                    ></highcharts-chart>
+            </mat-tab>
         </mat-tab-group>
     </div>
 

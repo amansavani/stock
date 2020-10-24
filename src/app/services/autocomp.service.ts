@@ -45,4 +45,9 @@ export class AutocompService {
     return this.http.get(_url+names.join(','));
   }
 
+  getChartData(name:string){
+    var _url = 'http://localhost:3000/chartData?q=';
+    return this.http.get(_url+name);
+  }
+
 }

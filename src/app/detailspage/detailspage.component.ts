@@ -7,8 +7,10 @@ import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import {MatTabsModule} from '@angular/material/tabs';
 import * as Highcharts from 'highcharts';
+import HC_stock from 'highcharts/modules/stock';
 import { Subscription, timer } from 'rxjs';
 import { switchMap, timeout } from 'rxjs/operators';
+HC_stock(Highcharts);
 
 interface Alert {
   type: string;
@@ -22,6 +24,35 @@ interface Alert {
 })
 export class DetailspageComponent implements OnInit {
 
+
+  DailyHighcharts: typeof Highcharts = Highcharts;
+  // DailyChartOptions: Highcharts.Options = {
+  //   series: [{
+  //     data: [1, 2, 3],
+  //     showInNavigator:true,
+  //     type: 'line',
+  //     tooltip: {
+  //       valueDecimals: 2
+  //       },
+  //   }],
+  //   yAxis:{
+  //     opposite: true,
+  //     className: undefined,
+  //     title:{
+  //       text: "",
+  //     }
+  //   },
+  //   navigator: {
+  //     enabled: true,      
+  // },
+  //   title: {
+  //     text: 'AAPL'
+  //   },
+  //   rangeSelector: {
+  //       enabled:false,
+  //   },
+  // };
+  DailyChartOptions: Highcharts.Options;
   tickername:string = '';
   dailypriceObj:object;
   metadataObj:object;
@@ -40,6 +71,7 @@ export class DetailspageComponent implements OnInit {
   month:string[]=["null","January","February","March","April","May","June","July","August","September","October","November","December"];
   dataReady:boolean;
   subscription: Subscription;
+  chartdata;
   
   // alerts start
   
@@ -237,6 +269,45 @@ export class DetailspageComponent implements OnInit {
       
     });
 
+    this._autocompservice.getChartData(this.tickername).subscribe(data=>{
+      this.chartdata=data;
+      this.DailyChartOptions={
+          series: [{
+            name:this.tickername.toUpperCase(),
+            data: this.chartdata,
+            showInNavigator:true,
+            type: 'line',
+            tooltip: {
+              valueDecimals: 2,
+              },
+          }],
+          xAxis: {  
+            type: 'datetime',
+          },
+          legend:{
+            enabled:false,
+          },
+          yAxis:{
+            opposite: true,
+            className: undefined,
+            title:{
+              text: "",
+            }
+          },
+          navigator: {
+            enabled: true,      
+        },
+          title: {
+            text: this.tickername.toUpperCase()
+          },
+          rangeSelector: {
+              enabled:false,
+          },
+        };
+
+
+
+    });
 
 
     this._autocompservice.getNewsData(this.tickername).subscribe(data=>{this.newsDataObject=data;});
