@@ -10,7 +10,14 @@ import * as Highcharts from 'highcharts';
 import HC_stock from 'highcharts/modules/stock';
 import { Subscription, timer } from 'rxjs';
 import { switchMap, timeout } from 'rxjs/operators';
+import vbp from 'highcharts/indicators/volume-by-price';
+import sma from 'highcharts/indicators/indicators';
+import ohlc from 'highcharts/indicators/indicators';
+// import * as Indicators from "highcharts/indicators/indicators";
 HC_stock(Highcharts);
+ohlc(Highcharts);
+sma(Highcharts);
+vbp(Highcharts);
 
 interface Alert {
   type: string;
@@ -26,6 +33,7 @@ export class DetailspageComponent implements OnInit {
 
 
   DailyHighcharts: typeof Highcharts = Highcharts;
+  HighchartsSMA: typeof Highcharts = Highcharts;
   // DailyChartOptions: Highcharts.Options = {
   //   series: [{
   //     data: [1, 2, 3],
@@ -53,6 +61,7 @@ export class DetailspageComponent implements OnInit {
   //   },
   // };
   DailyChartOptions: Highcharts.Options;
+  ChartOptionsSMA: Highcharts.Options;
   tickername:string = '';
   dailypriceObj:object;
   metadataObj:object;
@@ -288,6 +297,7 @@ export class DetailspageComponent implements OnInit {
             enabled:false,
           },
           yAxis:{
+            offset: -30,
             opposite: true,
             className: undefined,
             title:{
@@ -304,6 +314,132 @@ export class DetailspageComponent implements OnInit {
               enabled:false,
           },
         };
+    });
+
+    this._autocompservice.getChartDataSMA(this.tickername).subscribe(data=>{
+      let ohlc=data[0];
+      let volume=data[1];
+      console.log(ohlc,volume);
+      // let groupingUnits = [[
+      //       'week',                         // unit name
+      //       [1]                             // allowed multiples
+      //   ], [
+      //       'month',
+      //       [1, 2, 3, 4, 6]
+      //   ]]
+      this.ChartOptionsSMA=
+      {
+
+        rangeSelector: {
+          enabled:true,  
+          
+        },
+        legend:{
+          enabled:false,
+        },
+        navigator: {
+          enabled: true,      
+      },
+        xAxis: {  
+          type: 'datetime',
+        //   breaks: [
+        //     { // Nights
+        //     from: Date.UTC(2011, 9, 6, 16),
+        //     to: Date.UTC(2011, 9, 7, 8),
+        //     repeat: 24 * 36e5
+        // }, 
+        // { // Weekends
+        //     from: Date.UTC(2011, 9, 7, 16),
+        //     to: Date.UTC(2011, 9, 10, 8),
+        //     repeat: 7 * 24 * 36e5
+        // }],
+        },
+
+        title: {
+            text: this.tickername.toUpperCase()+' Historical'
+        },
+
+        subtitle: {
+            text: 'With SMA and Volume by Price technical indicators'
+        },
+
+        yAxis: [{
+            startOnTick: false,
+            endOnTick: false,
+            labels: {
+                align: 'right',
+                x: -3
+            },
+            title: {
+                text: 'OHLC'
+            },
+            height: '60%',
+            lineWidth: 2,
+            resize: {
+                enabled: true
+            },
+            opposite:true,
+        }, {
+            labels: {
+                align: 'right',
+                x: -3
+            },
+            title: {
+                text: 'Volume'
+            },
+            opposite:true,
+            top: '60%',
+            height: '40%',
+            offset: 0,
+            lineWidth: 2
+        }],
+
+        tooltip: {
+            split: true
+        },
+
+        // plotOptions: {
+        //     series: {
+        //         dataGrouping: {
+        //             units: groupingUnits
+        //         }
+        //     }
+        // },
+
+        series: [{
+            type: 'candlestick',
+            name: 'AAPL',
+            id: 'aapl',
+            zIndex: 2,
+            data: ohlc
+        }, {
+            type: 'column',
+            name: 'Volume',
+            id: 'volume',
+            data: volume,
+            yAxis: 1
+        }, {
+            type: 'vbp',
+            linkedTo: 'aapl',
+            params: {
+                volumeSeriesID: 'volume'
+            },
+            dataLabels: {
+                enabled: false
+            },
+            zoneLines: {
+                enabled: false
+            }
+        }, {
+            type: 'sma',
+            linkedTo: 'aapl',
+            zIndex: 1,
+            marker: {
+                enabled: false
+            }
+        }]
+    };//end of chart options
+
 
 
 

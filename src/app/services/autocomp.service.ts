@@ -50,4 +50,9 @@ export class AutocompService {
     return this.http.get(_url+name);
   }
 
+  getChartDataSMA(name:string){
+    var _url = 'http://localhost:3000/chartDataSMA?q=';
+    return this.http.get(_url+name);
+  }
+
 }
