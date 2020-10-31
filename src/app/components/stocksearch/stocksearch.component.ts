@@ -3,7 +3,7 @@ import { AutocompService } from '../../services/autocomp.service';
 import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {debounce, debounceTime, map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-stocksearch',
@@ -23,19 +23,26 @@ export class StocksearchComponent implements OnInit {
     // console.log("hello");
     this.router.navigate(['/details',ticker]);
   }
+
+  
+
   callApi(ticker:string){
       if(!ticker){
         return
       }
+      // this.dataObj=this.control.valueChanges.pipe(debounceTime(500))
       this.dataReady=false;
       this.dataObj=this._autocompservice.getAutoCompData(ticker);
-      
+      // this.dataReady=true;
+      setTimeout(()=>this.dataReady = true,1500);
       // this._autocompservice.getAutoCompData(ticker).subscribe(data=>{
       //   this.dataObj=data;
       //   this.dataReady=true;
       // });
   }
   ngOnInit(): void {
+  //   this.dataObj=this.control.valueChanges.pipe(debounceTime(500),
+  //   map(x=>this._autocompservice.getAutoCompData(x).subscribe(y=>{this.dataObj=y;this.dataReady=true})));
   }
 
 }

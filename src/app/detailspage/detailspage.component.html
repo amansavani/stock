@@ -28,12 +28,16 @@
                         <label>Current Price: {{dailypriceObj.last}}</label>
                         <br>
                         <label for="quantity">Quantity </label>
-                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" inputmode="numeric" id="quantity" name="quantity" min="0" inputmode="numeric" (input)="calculateCost($event.target.value)">
+                        <input style="width:100px;border-radius: 5px;margin-left:5px; border-style: solid;" type="number" inputmode="numeric" id="quantity" name="quantity" min="0" inputmode="numeric" 
+                        
+                        (input)="numStocks=$event.target.value;totalPrice=numStocks*dailypriceObj['last']"
+                        >
                         </div>
                     </form>
                     </div>
                     <div class="modal-footer">
                     <span class="mr-auto"><label>Total: </label><span>{{totalPrice}}</span></span>  
+                    
                     <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0'" (click)="buyStock();modal.close('Buy click')">Buy</button>
                     </div>
                 </ng-template>
@@ -126,6 +130,7 @@
                 </div>
             </mat-tab>
             <mat-tab label="Top News">
+                <ng-template matTabContent>
                 <div class="container d-flex flex-wrap " style="width: 100%;height: fit-content; overflow-y: hidden;" >
                     <div *ngFor="let news of newsDataObject" class="col-lg-6 col-md-12">
                         <div class="h-100 pt-4">
@@ -138,8 +143,10 @@
                         </div>
                     </div>
                 </div>
+            </ng-template>
             </mat-tab>
             <mat-tab label="Charts">
+                <ng-template matTabContent>
                 <div style="height: 100%;width: 100%;">
 
                     <highcharts-chart 
@@ -149,6 +156,7 @@
                         style="width: 100%; max-width: 100%;height: 800px; display: block;"
                         ></highcharts-chart>
                 </div>
+            </ng-template>
             </mat-tab>
         </mat-tab-group>
     </div>

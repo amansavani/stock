@@ -79,6 +79,7 @@ export class PortfolioComponent implements OnInit {
     console.log(this.purchasedSorted);
     
     this.numStocks=0;
+    this.refreshData();
   }
 
   sellStock(ele){
@@ -87,6 +88,7 @@ export class PortfolioComponent implements OnInit {
     let purchasedStockDetails = purchasedStockList[ele["tickername"]];;
     purchasedStockDetails["stockQuantity"]-= +this.numStocks;
     purchasedStockDetails["totalCost"]-= +this.totalPrice;
+    purchasedStockDetails["totalCost"] = parseFloat((purchasedStockDetails["totalCost"]).toFixed(2));
     purchasedStockList[ele["tickername"]]=purchasedStockDetails;
 
     if(purchasedStockDetails["stockQuantity"]>0){
@@ -115,7 +117,7 @@ export class PortfolioComponent implements OnInit {
     // console.log(this.purchasedSorted);
     
     this.numStocks=0;
-
+    this.refreshData();
   }
 
   ngOnInit(): void {
@@ -172,6 +174,47 @@ export class PortfolioComponent implements OnInit {
     console.log(this.purchasedListEmpty)
     
   }
-  
+
+  refreshData(){
+    // this.purchasedSorted=[];
+    this.purchasedlist=JSON.parse(localStorage.getItem("purchased"));
+      // console.log(this.purchasedlist.length)
+      
+      if (Object.keys(this.purchasedlist).length !=0){
+        this.purchasedListEmpty=false;
+        // console.log(this.purchasedlist);
+        let keys = Object.keys(this.purchasedlist).sort();
+        // for(let i=0;i<keys.length;i++){
+        //   this.purchasedSorted.push(this.purchasedlist[keys[i]]);
+        // }
+        // console.log(this.purchasedSorted);
+        
+        this._autocompservice.getMutlipleDailyPrice(keys).subscribe(data=>{
+          this.dailyPrice=data;
+          console.log(this.dailyPrice)
+          let temp=[]
+          for(let i=0;i<keys.length;i++){
+            temp.push(this.dailyPrice[i]["ticker"]);
+          }
+          for(let i=0;i<this.purchasedSorted.length;i++){
+            let index = temp.indexOf(keys[i]); 
+            if (this.dailyPrice[index]["bidPrice"]==null && this.dailyPrice[index]["bidSize"]==null && this.dailyPrice[index]["askSize"]==null && this.dailyPrice[index]["askPrice"]==null){
+              this.purchasedSorted[i]["marketOpen"]=false;
+            }
+            else{
+              this.purchasedSorted[i]["marketOpen"]=true;
+            }
+            console.log(this.purchasedSorted[i]["marketOpen"]);
+            this.purchasedSorted[i]["last"]= +this.dailyPrice[index]["last"];
+            // this.purchasedSorted[i]["prevClose"]= +this.dailyPrice[i]["prevClose"];
+            this.purchasedSorted[i]["avgCost"]= parseFloat((this.purchasedSorted[i]["totalCost"]/this.purchasedSorted[i]["stockQuantity"]).toFixed(2)); 
+            this.purchasedSorted[i]["change"]=parseFloat((this.purchasedSorted[i]["last"] - this.purchasedSorted[i]["avgCost"]).toFixed(2));
+            this.purchasedSorted[i]["marketVal"] = parseFloat((this.purchasedSorted[i]["last"]*this.purchasedSorted[i]["stockQuantity"]).toFixed(2));
+          }
+          console.log(this.purchasedSorted);
+          this.dataReady=true;
+        }); 
+  }
+}
 
 }

@@ -188,13 +188,8 @@ export class DetailspageComponent implements OnInit {
   toggle(){
     this.isStarred = !this.isStarred;
     
-    // this._success.next(this.metadataObj["ticker"]+ " added to Watchlist.");
-    // this._success.subscribe(message => this.successMessage = message);
-    // this._success.pipe(
-    //   debounceTime(5000)
-    // ).subscribe(() => this.successMessage = '');
     let watchlistString=localStorage.getItem("watchlist");
-    let watchlist=[];
+    let watchlist={};
     if(watchlistString != null){
       watchlist=JSON.parse(watchlistString);
       }
@@ -203,13 +198,13 @@ export class DetailspageComponent implements OnInit {
     if (this.isStarred){
       // alert:Alert = {type:"success",message:this.metadataObj["ticker"]+" added to Watchlist."};
       
-      watchlist.push(this.metadataObj["ticker"]);
+      watchlist[this.metadataObj["ticker"]]={tickername:this.metadataObj["ticker"],name:this.metadataObj["name"]};
       new_alert={type:"success",message:this.metadataObj["ticker"]+" added to Watchlist."}
       
     }
     else{
-      if (watchlist.includes(this.metadataObj["ticker"])){
-        watchlist.splice(watchlist.indexOf(this.metadataObj["ticker"],1));
+      if (watchlist.hasOwnProperty(this.metadataObj["ticker"])){
+        delete watchlist[this.metadataObj["ticker"]];
       }
       new_alert={type:"danger",message:this.metadataObj["ticker"]+" removed from Watchlist."};
     }
@@ -237,7 +232,7 @@ export class DetailspageComponent implements OnInit {
       else{
         this.validStock=true;
       }
-      if (JSON.parse(localStorage.getItem("watchlist")).includes(this.metadataObj["ticker"])){
+      if (JSON.parse(localStorage.getItem("watchlist"))[this.metadataObj["ticker"]]){
         this.isStarred=true;
       }
       else{
@@ -281,60 +276,61 @@ export class DetailspageComponent implements OnInit {
       this.timestamp=date.getFullYear() + "-" + String((date.getMonth() + 1)).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')+" "+String(date.getHours()).padStart(2,'0')+":"+String(date.getMinutes()).padStart(2,'0')+":"+String(date.getSeconds()).padStart(2,'0');
       // console.log(this.changePercent);
       if (this.dailypriceObj["bidPrice"]==null && this.dailypriceObj["bidSize"]==null && this.dailypriceObj["askSize"]==null && this.dailypriceObj["askPrice"]==null){
-        this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+this.dailypriceObj["timestamp"].slice(11,19)
+        this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+(parseFloat(this.dailypriceObj["timestamp"].slice(11,13))-7).toString()+this.dailypriceObj["timestamp"].slice(13,19);
         this.marketOpen=false;
       }
       // this.DailyHighcharts.
+      this.refreshChart();
       this.dataReady=true;
       console.log("1");
       
     });
 
-    this._autocompservice.getChartData(this.tickername).subscribe(data=>{
-      this.chartdata=data;
-      console.log(data);
-      this.DailyChartOptions={
-          series: [{
-            name:this.tickername.toUpperCase(),
-            data: this.chartdata,
-            showInNavigator:true,
-            type: 'line',
-            tooltip: {
-              valueDecimals: 2,
-              },
-            color:this.chartColor,
-            // navigatorOptions:{
-            //   opacity:0.5,
-            // }
-          }],
-          xAxis: {  
-            type: 'datetime',
-          },
-          legend:{
-            enabled:false,
-          },
-          yAxis:{
-            offset: -10,
-            opposite: true,
-            className: undefined,
-            title:{
-              text: "",
-            }
-          },
-          navigator: {
-            series:{
-              fillOpacity:1,
-            },
-            enabled: true,      
-        },
-          title: {
-            text: this.tickername.toUpperCase()
-          },
-          rangeSelector: {
-              enabled:false,
-          },
-        };
-    });
+    // this._autocompservice.getChartData(this.tickername).subscribe(data=>{
+    //   this.chartdata=data;
+    //   console.log(data);
+    //   this.DailyChartOptions={
+    //       series: [{
+    //         name:this.tickername.toUpperCase(),
+    //         data: this.chartdata,
+    //         showInNavigator:true,
+    //         type: 'line',
+    //         tooltip: {
+    //           valueDecimals: 2,
+    //           },
+    //         color:this.chartColor,
+    //         // navigatorOptions:{
+    //         //   opacity:0.5,
+    //         // }
+    //       }],
+    //       xAxis: {  
+    //         type: 'datetime',
+    //       },
+    //       legend:{
+    //         enabled:false,
+    //       },
+    //       yAxis:{
+    //         offset: -10,
+    //         opposite: true,
+    //         className: undefined,
+    //         title:{
+    //           text: "",
+    //         }
+    //       },
+    //       navigator: {
+    //         series:{
+    //           fillOpacity:1,
+    //         },
+    //         enabled: true,      
+    //     },
+    //       title: {
+    //         text: this.tickername.toUpperCase()
+    //       },
+    //       rangeSelector: {
+    //           enabled:false,
+    //       },
+    //     };
+    // });
 
     this._autocompservice.getChartDataSMA(this.tickername).subscribe(data=>{
       let ohlc=data[0];
@@ -445,5 +441,54 @@ export class DetailspageComponent implements OnInit {
   //   });
     
   // }
+
+  refreshChart(){
+    this._autocompservice.getChartData(this.tickername).subscribe(data=>{
+      this.chartdata=data;
+      console.log(data);
+      this.DailyChartOptions={
+          series: [{
+            name:this.tickername.toUpperCase(),
+            data: this.chartdata,
+            showInNavigator:true,
+            type: 'line',
+            tooltip: {
+              valueDecimals: 2,
+              },
+            color:this.chartColor,
+            // navigatorOptions:{
+            //   opacity:0.5,
+            // }
+          }],
+          xAxis: {  
+            type: 'datetime',
+          },
+          legend:{
+            enabled:false,
+          },
+          yAxis:{
+            offset: -10,
+            opposite: true,
+            className: undefined,
+            title:{
+              text: "",
+            }
+          },
+          navigator: {
+            series:{
+              fillOpacity:1,
+            },
+            enabled: true,      
+        },
+          title: {
+            text: this.tickername.toUpperCase()
+          },
+          rangeSelector: {
+              enabled:false,
+          },
+        };
+    });
+  }
+
 
 }

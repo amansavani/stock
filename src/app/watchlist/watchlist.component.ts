@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AutocompService } from '../services/autocomp.service';
 import { Router } from '@angular/router';
 
-interface StockDetails {
-  tickername: string;
-  name: string;
-  price: number;
-  change: number;
-  changepercent: number;
-}
+// interface StockDetails {
+//   tickername: string;
+//   name: string;
+//   price: number;
+//   change: number;
+//   changepercent: number;
+// }
 
 @Component({
   selector: 'app-watchlist',
@@ -21,7 +21,7 @@ export class WatchlistComponent implements OnInit {
 
   watchListEmpty:boolean;
   watchlist=[];
-  StockDetailsArray:StockDetails[];
+  StockDetailsArray=[];
   dataReady:boolean;
   constructor(private _autocompservice:AutocompService, private router: Router) { }
 
@@ -33,11 +33,27 @@ export class WatchlistComponent implements OnInit {
     }
     else{
       this.watchlist=JSON.parse(localStorage.getItem("watchlist"));
-      if (this.watchlist.length !=0){
+      if (Object.keys(this.watchlist).length !=0){
         this.watchListEmpty=false;
-        this.watchlist.sort();
-        this.StockDetailsArray=[];
-        this.getDataAsync();
+        let keys = Object.keys(this.watchlist).sort();
+        for(let i=0;i<keys.length;i++){
+          this.StockDetailsArray.push(this.watchlist[keys[i]]);
+        }
+        this._autocompservice.getMutlipleDailyPrice(keys).subscribe(data=>{
+          let temp=[]
+          for(let i=0;i<keys.length;i++){
+            temp.push(data[i]["ticker"]);
+          }
+          for(let i=0;i<keys.length;i++){
+            let index = temp.indexOf(keys[i]); 
+           
+            this.StockDetailsArray[i]["price"]=data[index]["last"];
+            this.StockDetailsArray[i]["change"]=parseFloat((data[index]["last"]-data[index]["prevClose"]).toFixed(2));
+            this.StockDetailsArray[i]["changepercent"]=parseFloat(((data[index]["last"]-data[index]["prevClose"])*100/data[index]["prevClose"]).toFixed(2));
+          }
+          console.log(this.StockDetailsArray);
+          this.dataReady=true;
+        });
       }
         
       else{
@@ -47,17 +63,18 @@ export class WatchlistComponent implements OnInit {
     }
   }
 
-removeFromWatch(stock:StockDetails){
+removeFromWatch(stock){
   this.StockDetailsArray.splice(this.StockDetailsArray.indexOf(stock),1);
   let watchlist=JSON.parse(localStorage.getItem("watchlist"));
-  watchlist.splice(watchlist.indexOf(stock["tickername"],1));
-  if(watchlist.length==0){
+  // watchlist.splice(watchlist.indexOf(stock["tickername"],1));
+  delete watchlist[stock["tickername"]];
+  if(this.StockDetailsArray.length==0){
     this.watchListEmpty=true;
   }
   localStorage.setItem("watchlist",JSON.stringify(watchlist));
-  
+  this.refreshData();
 }
-NavigateStock(stock:StockDetails){
+NavigateStock(stock){
   // console.log("hello");
   this.router.navigate(['/details',stock["tickername"]]);
 }
@@ -87,5 +104,32 @@ NavigateStock(stock:StockDetails){
     };
     this.dataReady=true;
   }
+
+  refreshData(){
+    
+    this.watchlist=JSON.parse(localStorage.getItem("watchlist"));
+      if (Object.keys(this.watchlist).length !=0){
+        this.watchListEmpty=false;
+        let keys = Object.keys(this.watchlist).sort();
+        // for(let i=0;i<keys.length;i++){
+        //   this.StockDetailsArray.push(this.watchlist[keys[i]]);
+        // }
+        this._autocompservice.getMutlipleDailyPrice(keys).subscribe(data=>{
+          let temp=[]
+          for(let i=0;i<keys.length;i++){
+            temp.push(data[i]["ticker"]);
+          }
+          for(let i=0;i<keys.length;i++){
+            let index = temp.indexOf(keys[i]); 
+           
+            this.StockDetailsArray[i]["price"]=data[index]["last"];
+            this.StockDetailsArray[i]["change"]=parseFloat((data[index]["last"]-data[index]["prevClose"]).toFixed(2));
+            this.StockDetailsArray[i]["changepercent"]=parseFloat(((data[index]["last"]-data[index]["prevClose"])*100/data[index]["prevClose"]).toFixed(2));
+          }
+          console.log(this.StockDetailsArray);
+          this.dataReady=true;
+        });
+  }
+}
 
 }
