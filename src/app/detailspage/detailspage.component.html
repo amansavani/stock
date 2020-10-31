@@ -58,10 +58,10 @@
     <div>
         <mat-tab-group mat-stretch-tabs class="example-stretched-tabs mt-5">
             <mat-tab label="Summary">
-                <div class="d-flex container justify-content-between mt-5 row">
+                <div class="d-flex container justify-content-between mt-5 pr-0 row" >
                     <div class="col-md-6 col-sm-12">
                         <div class="d-flex justify-content-around" > 
-                            <div class='d-flex justify-content-between'>
+                            <div class='d-flex justify-content-between' >
                                 <div>
                                     <div>High Price:</div>
                                     <div>Low Price:</div>
@@ -82,17 +82,17 @@
                                 <p>Prev. Close: {{dailypriceObj.prevClose}}</p>
                                 <p>Volume: {{dailypriceObj.volume}}</p> -->
                             </div>
-                            <div>
+                            <div> 
 
-                                <div *ngIf="marketOpen" class='d-flex justify-content-between'>
-                                    <div>
+                                <div  class='d-flex justify-content-between' >
+                                    <div *ngIf="marketOpen">
                                         <div>Mid Price:</div>
                                         <div>Ask Price:</div>
                                         <div>Ask Size:</div>
                                         <div>Bid Price:</div>
                                         <div>Bid Size:</div>
                                     </div>
-                                    <div>
+                                    <div *ngIf="marketOpen">
                                         <div>{{dailypriceObj.mid}}</div>
                                         <div>{{dailypriceObj.askPrice}}</div>
                                         <div>{{dailypriceObj.askSize}}</div>
@@ -114,11 +114,11 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
-                        <div id="summary-chart" style="height: 400px; min-width: 400px;">
+                        <div id="summary-chart" style="height: 400px; ">
                             <highcharts-chart 
                             [Highcharts]="DailyHighcharts"
                             [options]="DailyChartOptions"
-                            
+                            [constructorType]="'stockChart'"
                             style="width: 100%; display: block;"
                             ></highcharts-chart>
                         </div>
@@ -126,7 +126,7 @@
                 </div>
             </mat-tab>
             <mat-tab label="Top News">
-                <div class="container d-flex flex-wrap " style="width: 100%;height: fit-content;" >
+                <div class="container d-flex flex-wrap " style="width: 100%;height: fit-content; overflow-y: hidden;" >
                     <div *ngFor="let news of newsDataObject" class="col-lg-6 col-md-12">
                         <div class="h-100 pt-4">
                             <div class="card bg-light h-100" (click)="openNewsModal(newscontent,news)" style="margin-bottom: 9px; ">
@@ -139,13 +139,16 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Charts"> Charts 
-                <highcharts-chart 
-                    [Highcharts]="HighchartsSMA"
-                    [options]="ChartOptionsSMA"
-                    
-                    style="width: 100%; max-width: 100%; display: block;"
-                    ></highcharts-chart>
+            <mat-tab label="Charts">
+                <div style="height: 100%;width: 100%;">
+
+                    <highcharts-chart 
+                        [Highcharts]="HighchartsSMA"
+                        [options]="ChartOptionsSMA"
+                        [constructorType]="'stockChart'"
+                        style="width: 100%; max-width: 100%;height: 800px; display: block;"
+                        ></highcharts-chart>
+                </div>
             </mat-tab>
         </mat-tab-group>
     </div>

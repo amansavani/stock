@@ -93,7 +93,7 @@
                 </div>
                 <div class="modal-footer">
                 <span class="mr-auto"><label>Total: </label><span>{{totalPrice}}</span></span>  
-                <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0' || numStocks > ele.stockQuantity  " (click)="sellStock(ele);modal.close('Buy click')">Sell</button>
+                <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0' || numStocks > ele.stockQuantity || !ele.marketOpen " (click)="sellStock(ele);modal.close('Buy click')">Sell</button>
                 </div>
             </ng-template>
 

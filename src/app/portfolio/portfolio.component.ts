@@ -18,6 +18,7 @@ export class PortfolioComponent implements OnInit {
   closeResult:string;
   numStocks:number;
   dataReady:boolean;
+  marketOpen:boolean;
   constructor(private _autocompservice:AutocompService, private router: Router, private modalService: NgbModal) { this.dataReady=false}
 
   open(content) {
@@ -144,6 +145,13 @@ export class PortfolioComponent implements OnInit {
           }
           for(let i=0;i<this.purchasedSorted.length;i++){
             let index = temp.indexOf(keys[i]); 
+            if (this.dailyPrice[index]["bidPrice"]==null && this.dailyPrice[index]["bidSize"]==null && this.dailyPrice[index]["askSize"]==null && this.dailyPrice[index]["askPrice"]==null){
+              this.purchasedSorted[i]["marketOpen"]=false;
+            }
+            else{
+              this.purchasedSorted[i]["marketOpen"]=true;
+            }
+            console.log(this.purchasedSorted[i]["marketOpen"]);
             this.purchasedSorted[i]["last"]= +this.dailyPrice[index]["last"];
             // this.purchasedSorted[i]["prevClose"]= +this.dailyPrice[i]["prevClose"];
             this.purchasedSorted[i]["avgCost"]= parseFloat((this.purchasedSorted[i]["totalCost"]/this.purchasedSorted[i]["stockQuantity"]).toFixed(2)); 

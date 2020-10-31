@@ -5,14 +5,16 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
-import {MatTabsModule} from '@angular/material/tabs';
-import * as Highcharts from 'highcharts';
+import * as Highcharts from 'highcharts/highstock';
 import HC_stock from 'highcharts/modules/stock';
 import { Subscription, timer } from 'rxjs';
 import { switchMap, timeout } from 'rxjs/operators';
 import vbp from 'highcharts/indicators/volume-by-price';
 import sma from 'highcharts/indicators/indicators';
 import ohlc from 'highcharts/indicators/indicators';
+import IndicatorsCore from "highcharts/indicators/indicators";
+
+IndicatorsCore(Highcharts);
 // import * as Indicators from "highcharts/indicators/indicators";
 HC_stock(Highcharts);
 ohlc(Highcharts);
@@ -81,7 +83,7 @@ export class DetailspageComponent implements OnInit {
   dataReady:boolean;
   subscription: Subscription;
   chartdata;
-  
+  chartColor;
   // alerts start
   
 
@@ -217,9 +219,9 @@ export class DetailspageComponent implements OnInit {
     console.log(watchlist);
     // must save data
   }
-  // ngOnDestroy() {
-  //   this.subscription.unsubscribe();
-  // }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.tickername=this.route.snapshot.paramMap.get('tickername');
@@ -264,6 +266,15 @@ export class DetailspageComponent implements OnInit {
       this.dailypriceObj=data;
       this.dailypriceObj=this.dailypriceObj[0];
       this.change = parseFloat((this.dailypriceObj["last"] - this.dailypriceObj["prevClose"]).toFixed(2));
+      if(this.change<0){
+        this.chartColor='red';
+      }
+      else if(this.change==0){
+        this.chartColor='black';
+      }
+      else{
+        this.chartColor='#407f44';
+      }
       this.changePercent = parseFloat((this.change / this.dailypriceObj["prevClose"] *100).toFixed(2)); 
       var date =new Date();
       this.marketOpen=true;
@@ -273,6 +284,7 @@ export class DetailspageComponent implements OnInit {
         this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+this.dailypriceObj["timestamp"].slice(11,19)
         this.marketOpen=false;
       }
+      // this.DailyHighcharts.
       this.dataReady=true;
       console.log("1");
       
@@ -280,6 +292,7 @@ export class DetailspageComponent implements OnInit {
 
     this._autocompservice.getChartData(this.tickername).subscribe(data=>{
       this.chartdata=data;
+      console.log(data);
       this.DailyChartOptions={
           series: [{
             name:this.tickername.toUpperCase(),
@@ -289,6 +302,10 @@ export class DetailspageComponent implements OnInit {
             tooltip: {
               valueDecimals: 2,
               },
+            color:this.chartColor,
+            // navigatorOptions:{
+            //   opacity:0.5,
+            // }
           }],
           xAxis: {  
             type: 'datetime',
@@ -297,7 +314,7 @@ export class DetailspageComponent implements OnInit {
             enabled:false,
           },
           yAxis:{
-            offset: -30,
+            offset: -10,
             opposite: true,
             className: undefined,
             title:{
@@ -305,6 +322,9 @@ export class DetailspageComponent implements OnInit {
             }
           },
           navigator: {
+            series:{
+              fillOpacity:1,
+            },
             enabled: true,      
         },
           title: {
@@ -320,130 +340,84 @@ export class DetailspageComponent implements OnInit {
       let ohlc=data[0];
       let volume=data[1];
       console.log(ohlc,volume);
-      // let groupingUnits = [[
-      //       'week',                         // unit name
-      //       [1]                             // allowed multiples
-      //   ], [
-      //       'month',
-      //       [1, 2, 3, 4, 6]
-      //   ]]
       this.ChartOptionsSMA=
-      {
-
-        rangeSelector: {
-          enabled:true,  
-          
-        },
-        legend:{
-          enabled:false,
-        },
-        navigator: {
-          enabled: true,      
+    
+     {
+      title: {
+        text: this.tickername.toUpperCase() + ' Historical'
       },
-        xAxis: {  
-          type: 'datetime',
-        //   breaks: [
-        //     { // Nights
-        //     from: Date.UTC(2011, 9, 6, 16),
-        //     to: Date.UTC(2011, 9, 7, 8),
-        //     repeat: 24 * 36e5
-        // }, 
-        // { // Weekends
-        //     from: Date.UTC(2011, 9, 7, 16),
-        //     to: Date.UTC(2011, 9, 10, 8),
-        //     repeat: 7 * 24 * 36e5
-        // }],
+      subtitle: {
+        text: 'With SMA and Volume by Price technical indicators'
+      },
+      tooltip: {
+        split: true
+      },
+      yAxis: [{
+        startOnTick: false,
+        endOnTick: false,
+        labels: {
+          align: 'right',
+          x: -3
         },
-
         title: {
-            text: this.tickername.toUpperCase()+' Historical'
+          text: 'OHLC'
         },
-
-        subtitle: {
-            text: 'With SMA and Volume by Price technical indicators'
+        height: '60%',
+        lineWidth: 2,
+        resize: {
+          enabled: true
+        }
+      }, {
+        labels: {
+          align: 'right',
+          x: -3
         },
-
-        yAxis: [{
-            startOnTick: false,
-            endOnTick: false,
-            labels: {
-                align: 'right',
-                x: -3
-            },
-            title: {
-                text: 'OHLC'
-            },
-            height: '60%',
-            lineWidth: 2,
-            resize: {
-                enabled: true
-            },
-            opposite:true,
-        }, {
-            labels: {
-                align: 'right',
-                x: -3
-            },
-            title: {
-                text: 'Volume'
-            },
-            opposite:true,
-            top: '60%',
-            height: '40%',
-            offset: 0,
-            lineWidth: 2
-        }],
-
-        tooltip: {
-            split: true
+        title: {
+          text: 'Volume'
         },
-
-        // plotOptions: {
-        //     series: {
-        //         dataGrouping: {
-        //             units: groupingUnits
-        //         }
-        //     }
-        // },
-
-        series: [{
-            type: 'candlestick',
-            name: 'AAPL',
-            id: 'aapl',
-            zIndex: 2,
-            data: ohlc
-        }, {
-            type: 'column',
-            name: 'Volume',
-            id: 'volume',
-            data: volume,
-            yAxis: 1
-        }, {
-            type: 'vbp',
-            linkedTo: 'aapl',
-            params: {
-                volumeSeriesID: 'volume'
-            },
-            dataLabels: {
-                enabled: false
-            },
-            zoneLines: {
-                enabled: false
-            }
-        }, {
-            type: 'sma',
-            linkedTo: 'aapl',
-            zIndex: 1,
-            marker: {
-                enabled: false
-            }
-        }]
-    };//end of chart options
+        top: '65%',
+        height: '35%',
+        offset: 0,
+        lineWidth: 2
+      }],
+      series: [{
+        type: 'candlestick',
+        name: this.tickername.toUpperCase(),
+        id: 'ohlc',
+        zIndex: 2,
+        data: ohlc,
+      }, {
+        type: 'column',
+        name: 'Volume',
+        id: 'volume',
+        data: volume,
+        yAxis: 1
+      }, {
+        type: 'vbp',
+        linkedTo: 'ohlc',
+        params: {
+          volumeSeriesID: 'volume'
+        },
+        dataLabels: {
+          enabled: false
+        },
+        zoneLines: {
+          enabled: false
+        }
+      }, {
+        type: 'sma',
+        linkedTo: 'ohlc',
+        zIndex: 1,
+        marker: {
+          enabled: false
+        }
+      }]
+    };
+  
 
 
 
-
-    });
+});
 
 
     this._autocompservice.getNewsData(this.tickername).subscribe(data=>{this.newsDataObject=data;});
