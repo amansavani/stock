@@ -36,9 +36,9 @@
                     </form>
                     </div>
                     <div class="modal-footer">
-                    <span class="mr-auto"><label>Total: </label><span>{{totalPrice}}</span></span>  
+                    <span class="mr-auto"><label>Total: </label><span>{{totalPrice | number : '.2-2'}}</span></span>  
                     
-                    <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0'" (click)="buyStock();modal.close('Buy click')">Buy</button>
+                    <button type="button" class="btn btn-success" [disabled]="totalPrice=='0.00' || totalPrice=='0' ||totalPrice<0" (click)="buyStock();modal.close('Buy click')">Buy</button>
                     </div>
                 </ng-template>
 
@@ -46,7 +46,7 @@
                 <button (click)="open(content)" type="button" class="btn btn-success">Buy</button>
             </div>
             <div [ngStyle]="{color:change>=0 ? change==0 ? 'black' : 'green' : 'red'}" class="text-right">
-                <h2>{{dailypriceObj.last}}</h2>
+                <h2>{{dailypriceObj.last | number : '.2-2'}}</h2>
                 <div *ngIf="change>=0; else downMarket"><h3><i *ngIf="change>0;" class="fa fa-caret-up"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
                 <ng-template #downMarket>
                     <div ><h3><i class="fa fa-caret-down"></i>{{" "+change +" ("+changePercent+"%)"}}</h3></div>
@@ -63,7 +63,7 @@
         <mat-tab-group mat-stretch-tabs class="example-stretched-tabs mt-5">
             <mat-tab label="Summary">
                 <div class="d-flex container justify-content-between mt-5 pr-0 row" >
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-lg-6 col-md-12">
                         <div class="d-flex justify-content-around" > 
                             <div class='d-flex justify-content-between' >
                                 <div>
@@ -74,11 +74,11 @@
                                     <div>Volume:</div>
                                 </div>
                                 <div>
-                                    <div>{{dailypriceObj.high}}</div>
-                                    <div>{{dailypriceObj.low}}</div>
-                                    <div>{{dailypriceObj.open}}</div>
-                                    <div>{{dailypriceObj.prevClose}}</div>
-                                    <div>{{dailypriceObj.volume}}</div>
+                                    <div>{{dailypriceObj.high | number : '.2-2'}}</div>
+                                    <div>{{dailypriceObj.low | number : '.2-2'}}</div>
+                                    <div>{{dailypriceObj.open | number : '.2-2'}}</div>
+                                    <div>{{dailypriceObj.prevClose | number : '.2-2'}}</div>
+                                    <div>{{dailypriceObj.volume | number:'.0'}} </div>
                                 </div>
                                 <!-- <p>High Price: {{dailypriceObj.high}}</p>
                                 <p>Low Price: {{dailypriceObj.low}}</p>
@@ -86,22 +86,22 @@
                                 <p>Prev. Close: {{dailypriceObj.prevClose}}</p>
                                 <p>Volume: {{dailypriceObj.volume}}</p> -->
                             </div>
-                            <div> 
+                            
 
-                                <div  class='d-flex justify-content-between' >
-                                    <div *ngIf="marketOpen">
+                                <div  class='d-flex justify-content-between'  >
+                                    <div *ngIf="!marketOpen">
                                         <div>Mid Price:</div>
                                         <div>Ask Price:</div>
                                         <div>Ask Size:</div>
                                         <div>Bid Price:</div>
                                         <div>Bid Size:</div>
                                     </div>
-                                    <div *ngIf="marketOpen">
-                                        <div>{{dailypriceObj.mid}}</div>
-                                        <div>{{dailypriceObj.askPrice}}</div>
-                                        <div>{{dailypriceObj.askSize}}</div>
-                                        <div>{{dailypriceObj.bidPrice}}</div>
-                                        <div>{{dailypriceObj.bidSize}}</div>
+                                    <div *ngIf="!marketOpen">
+                                        <div>{{dailypriceObj.mid | number : '.2-2'}}</div>
+                                        <div>{{dailypriceObj.askPrice | number : '.2-2'}}</div>
+                                        <div>{{dailypriceObj.askSize | number : '.2-2'}}</div>
+                                        <div>{{dailypriceObj.bidPrice | number : '.2-2'}}</div>
+                                        <div>{{dailypriceObj.bidSize | number : '.2-2'}}</div>
                                     </div>
                                     <!-- <p>Mid Price: {{dailypriceObj.mid}}</p>
                                     <p>Ask Price: {{dailypriceObj.askPrice}}</p>
@@ -109,7 +109,7 @@
                                     <p>Bid Price: {{dailypriceObj.bidPrice}}</p>
                                     <p>Bid Size: {{dailypriceObj.bidSize}}</p> -->
                                 </div>
-                            </div>
+                            
                         </div>
                         <div class="mt-5"> 
                             <h3 style="text-align: center; font-size: 1.5rem;" class="mb-4">Company's Description</h3>
@@ -117,7 +117,7 @@
                             <p>{{metadataObj.description}}</p>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-lg-6 col-md-12">
                         <div id="summary-chart" style="height: 400px; ">
                             <highcharts-chart 
                             [Highcharts]="DailyHighcharts"
@@ -134,10 +134,10 @@
                 <div class="container d-flex flex-wrap " style="width: 100%;height: fit-content; overflow-y: hidden;" >
                     <div *ngFor="let news of newsDataObject" class="col-lg-6 col-md-12">
                         <div class="h-100 pt-4">
-                            <div class="card bg-light h-100" (click)="openNewsModal(newscontent,news)" style="margin-bottom: 9px; ">
+                            <div class="card bg-light h-100" (click)="openNewsModal(newscontent,news)" style="margin-bottom: 9px; cursor: pointer;">
                                 <div class="card-body row" >
-                                  <img class="card-img col-lg-3 col-md-12" src='{{news.urlToImage}}' alt="Card image" style="object-fit: cover;">
-                                  <p class="card-text col-lg-9 col-md-12">{{news.title}}</p>
+                                  <img class="card-img col-md-3 col-sm-12" src='{{news.urlToImage}}' alt="Card image" style="object-fit: cover;">
+                                  <p class="card-text col-md-9 col-sm-12">{{news.title}}</p>
                                 </div>
                             </div>
                         </div>

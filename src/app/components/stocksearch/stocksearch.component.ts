@@ -34,7 +34,7 @@ export class StocksearchComponent implements OnInit {
       this.dataReady=false;
       this.dataObj=this._autocompservice.getAutoCompData(ticker);
       // this.dataReady=true;
-      setTimeout(()=>this.dataReady = true,1500);
+      setTimeout(()=>this.dataReady = true,800);
       // this._autocompservice.getAutoCompData(ticker).subscribe(data=>{
       //   this.dataObj=data;
       //   this.dataReady=true;

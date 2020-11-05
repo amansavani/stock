@@ -7,19 +7,21 @@ import {Component} from '@angular/core';
 })
 export class AutocompService {
 
+  // url='http://hw8-env.eba-4ppfxpr5.us-east-1.elasticbeanstalk.com';
+  url='http://localhost:8080';
   constructor(private http:HttpClient) { }
 
   getAutoCompData(name:string){
-    var _url = 'http://localhost:3000/autocompletedata?q=';
+    var _url = this.url+'/autocompletedata?q=';
     return this.http.get(_url+name);
   }
 
   getMetaData(name:string){
-    var _url = 'http://localhost:3000/metadata?q=';
+    var _url = this.url+'/metadata?q=';
     return this.http.get(_url+name);
   }
   getDailyPrice(name:string){
-    var _url = 'http://localhost:3000/dailyprice?q=';
+    var _url = this.url+'/dailyprice?q=';
     return this.http.get(_url+name);
   }
   async getAsyncData(name:string){
@@ -34,24 +36,24 @@ export class AutocompService {
   }
 
   getNewsData(name:string){
-    var _url = 'http://localhost:3000/news?q=';
+    var _url = this.url+'/news?q=';
     return this.http.get(_url+name);
 
   }
 
   getMutlipleDailyPrice(names:string[]){
-    var _url = 'http://localhost:3000/dailyprice?q=';
+    var _url = this.url+'/dailyprice?q=';
     names.join(',');
     return this.http.get(_url+names.join(','));
   }
 
   getChartData(name:string){
-    var _url = 'http://localhost:3000/chartData?q=';
+    var _url = this.url+'/chartData?q=';
     return this.http.get(_url+name);
   }
 
   getChartDataSMA(name:string){
-    var _url = 'http://localhost:3000/chartDataSMA?q=';
+    var _url = this.url+'/chartDataSMA?q=';
     return this.http.get(_url+name);
   }
 

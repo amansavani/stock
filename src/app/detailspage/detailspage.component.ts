@@ -99,7 +99,13 @@ export class DetailspageComponent implements OnInit {
 
   calculateCost(x){
     this.numStocks=x;
-    this.totalPrice=((x*this.dailypriceObj["last"]).toFixed(2)).toString();
+    if(x<=0){
+      this.totalPrice="0.00";
+    }
+    else{
+
+      this.totalPrice=((x*this.dailypriceObj["last"]).toFixed(2)).toString();
+    }
     // console.log(this.totalPrice);
   }
   
@@ -217,6 +223,15 @@ export class DetailspageComponent implements OnInit {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+  replaceNullWithDashes(){
+    var keys = Object.keys(this.dailypriceObj);
+    keys.forEach(element => {
+      if(this.dailypriceObj[element]==null){
+        this.dailypriceObj[element]='-';
+      }
+    });
+
+  }
 
   ngOnInit(): void {
     this.tickername=this.route.snapshot.paramMap.get('tickername');
@@ -274,16 +289,39 @@ export class DetailspageComponent implements OnInit {
       var date =new Date();
       this.marketOpen=true;
       this.timestamp=date.getFullYear() + "-" + String((date.getMonth() + 1)).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0')+" "+String(date.getHours()).padStart(2,'0')+":"+String(date.getMinutes()).padStart(2,'0')+":"+String(date.getSeconds()).padStart(2,'0');
+      
+      //Date from API "timestamp"
+      var t2 = date.getTime(); //current time
+      var tempInput = this.dailypriceObj["timestamp"];
+      var dateM = new Date(tempInput);
+      var t1 = dateM.getTime(); // time from api
+      // this.format = dateU.getFullYear() + "-" + ("0" + (+dateU.getMonth() + 1)).slice(-2) + "-" + ("0" + dateU.getDate()).slice(-2) + " " + time
+      // console.log(t2);
+      // console.log(t1);
       // console.log(this.changePercent);
-      if (this.dailypriceObj["bidPrice"]==null && this.dailypriceObj["bidSize"]==null && this.dailypriceObj["askSize"]==null && this.dailypriceObj["askPrice"]==null){
-        this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+(parseFloat(this.dailypriceObj["timestamp"].slice(11,13))-7).toString()+this.dailypriceObj["timestamp"].slice(13,19);
+      if ( t2-t1>60000){
+        this.format = this.dailypriceObj["timestamp"].slice(0,10)+" "+(parseFloat(this.dailypriceObj["timestamp"].slice(11,13))-8).toString()+this.dailypriceObj["timestamp"].slice(13,19);
+        // this.format = dateM.getFullYear() + "-" + ("0" + (+dateM.getMonth() + 1)).slice(-2) + "-" + ("0" + dateM.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
         this.marketOpen=false;
       }
       // this.DailyHighcharts.
       this.refreshChart();
       this.dataReady=true;
       console.log("1");
-      
+      this.replaceNullWithDashes();// to remove null elements with dashes
+      this.totalPrice=(this.numStocks*this.dailypriceObj["last"]).toString();
+
+      //Current date and time
+    
+    // this.currentDate = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+    
+    
+
+
+
+
+
+
     });
 
     // this._autocompservice.getChartData(this.tickername).subscribe(data=>{
@@ -407,7 +445,10 @@ export class DetailspageComponent implements OnInit {
         marker: {
           enabled: false
         }
-      }]
+      }],
+      rangeSelector:{
+        selected:2,
+      }
     };
   
 
@@ -482,6 +523,9 @@ export class DetailspageComponent implements OnInit {
         },
           title: {
             text: this.tickername.toUpperCase()
+          },
+          time:{
+            useUTC:false,
           },
           rangeSelector: {
               enabled:false,

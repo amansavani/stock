@@ -16,14 +16,14 @@
                         id='s-bar'>
         <mat-autocomplete #auto="matAutocomplete" [panelWidth]="230">
             <mat-option *ngFor="let option of dataObj | async" [value]="option.ticker">
-              {{option.ticker +" | "+option.name}}
+              <strong>{{option.ticker}}</strong> | {{option.name}}
             </mat-option>
             <mat-option *ngIf="!dataReady">
                 <mat-spinner [diameter]=40 style="margin: 0 auto;"></mat-spinner>
             </mat-option>
         </mat-autocomplete>
         
-        <div style="display: inline;" (click)="searchStock(typedinput.value)"><i style="color:rgb(105,84,242); margin-left:-48px" class="fa fa-search " ></i></div>
+        <div style="display: inline;" (click)="searchStock(typedinput.value)"><i style="color:rgb(105,84,242); margin-left:-48px; cursor: pointer;" class="fa fa-search " ></i></div>
     <!-- </mat-form-field>
         </form> -->
     </div>

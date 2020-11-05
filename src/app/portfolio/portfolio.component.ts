@@ -146,14 +146,27 @@ export class PortfolioComponent implements OnInit {
             temp.push(this.dailyPrice[i]["ticker"]);
           }
           for(let i=0;i<this.purchasedSorted.length;i++){
+
             let index = temp.indexOf(keys[i]); 
-            if (this.dailyPrice[index]["bidPrice"]==null && this.dailyPrice[index]["bidSize"]==null && this.dailyPrice[index]["askSize"]==null && this.dailyPrice[index]["askPrice"]==null){
-              this.purchasedSorted[i]["marketOpen"]=false;
-            }
-            else{
-              this.purchasedSorted[i]["marketOpen"]=true;
-            }
-            console.log(this.purchasedSorted[i]["marketOpen"]);
+
+            // var date =new Date();
+            // var t2 = date.getTime();
+            // var tempInput = this.dailyPrice[index]["timestamp"].substr(0, 10) + "T" + this.dailyPrice[index]["timestamp"].substr(11, 8) + "Z";
+            // var dateM = new Date(Date.parse(tempInput));
+            // let dateU = new Date(dateM);
+            // var time = dateU.toTimeString().slice(0, 8);
+            // var t1 = dateU.getTime();
+      
+
+
+            
+            // if (this.dailyPrice[index]["bidPrice"]==null && this.dailyPrice[index]["bidSize"]==null && this.dailyPrice[index]["askSize"]==null && this.dailyPrice[index]["askPrice"]==null && t2-t1>60000){
+            //   this.purchasedSorted[i]["marketOpen"]=false;
+            // }
+            // else{
+            //   this.purchasedSorted[i]["marketOpen"]=true;
+            // }
+            // console.log(this.purchasedSorted[i]["marketOpen"]);
             this.purchasedSorted[i]["last"]= +this.dailyPrice[index]["last"];
             // this.purchasedSorted[i]["prevClose"]= +this.dailyPrice[i]["prevClose"];
             this.purchasedSorted[i]["avgCost"]= parseFloat((this.purchasedSorted[i]["totalCost"]/this.purchasedSorted[i]["stockQuantity"]).toFixed(2)); 
