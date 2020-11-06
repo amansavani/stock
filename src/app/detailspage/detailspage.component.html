@@ -10,8 +10,8 @@
         </div>
         <div class="d-flex flex-row justify-content-between mt-3 mx-3">
             <div>
-                <span *ngIf="isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons" style="color: gold;">star</i></h2></span>
-                <span *ngIf="!isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons">star_outline</i></h2></span>
+                <span *ngIf="isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons" style="color: gold;cursor: pointer;">star</i></h2></span>
+                <span *ngIf="!isStarred"><h2>{{metadataObj.ticker}}<i (click)="toggle()" class="material-icons" style="cursor: pointer;">star_outline</i></h2></span>
                 <h3 style="color: grey;">{{metadataObj.name}}</h3>
                 <p>{{metadataObj.exchangeCode}}</p>
 
@@ -89,14 +89,14 @@
                             
 
                                 <div  class='d-flex justify-content-between'  >
-                                    <div *ngIf="!marketOpen">
+                                    <div *ngIf="marketOpen">
                                         <div>Mid Price:</div>
                                         <div>Ask Price:</div>
                                         <div>Ask Size:</div>
                                         <div>Bid Price:</div>
                                         <div>Bid Size:</div>
                                     </div>
-                                    <div *ngIf="!marketOpen">
+                                    <div *ngIf="marketOpen">
                                         <div>{{dailypriceObj.mid | number : '.2-2'}}</div>
                                         <div>{{dailypriceObj.askPrice | number : '.2-2'}}</div>
                                         <div>{{dailypriceObj.askSize | number : '.2-2'}}</div>

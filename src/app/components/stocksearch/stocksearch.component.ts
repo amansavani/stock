@@ -21,6 +21,9 @@ export class StocksearchComponent implements OnInit {
               private router: Router) { }
   searchStock(ticker:string){
     // console.log("hello");
+    if(!ticker){
+      return;
+    }
     this.router.navigate(['/details',ticker]);
   }
 

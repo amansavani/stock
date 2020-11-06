@@ -24,6 +24,7 @@ vbp(Highcharts);
 interface Alert {
   type: string;
   message: string;
+  starred: boolean;
 }
 
 @Component({
@@ -77,7 +78,7 @@ export class DetailspageComponent implements OnInit {
   isStarred:boolean=false;
   numStocks:number;
   validStock:boolean;
-  newsDataObject:object;
+  newsDataObject=[];
   currentNews:object;
   month:string[]=["null","January","February","March","April","May","June","July","August","September","October","November","December"];
   dataReady:boolean;
@@ -89,8 +90,9 @@ export class DetailspageComponent implements OnInit {
 
   alerts: Alert[];
   close(alert: Alert) {
-
-    this.alerts.splice(this.alerts.indexOf(alert), 1);
+    if (this.alerts.includes(alert)){
+      this.alerts.splice(this.alerts.indexOf(alert), 1);
+    }
   }
 
   
@@ -131,7 +133,7 @@ export class DetailspageComponent implements OnInit {
     }
   }
   buyStock(){
-    let new_alert:Alert={type:"success",message:this.metadataObj["ticker"]+" bought successfully!"};
+    let new_alert:Alert={type:"success",message:this.metadataObj["ticker"]+" bought successfully!",starred:false};
     this.alerts.unshift(new_alert);
     setTimeout(this.close.bind(this),5000,new_alert);
     console.log("must buy "+this.metadataObj["ticker"]+" at rate "+this.dailypriceObj["last"]+" quantity "+this.numStocks+" total cost "+this.totalPrice);
@@ -183,7 +185,7 @@ export class DetailspageComponent implements OnInit {
     let dateStringArray = this.currentNews["publishedAt"].split('T')[0].split('-');
     // console.log(dateStringArray)
     this.currentNews["publishedAtModified"]=this.month[parseInt(dateStringArray[1])].toString()+" "+dateStringArray[2]+", "+dateStringArray[0];
-    this.currentNews["twitterContent"]=this.currentNews["title"].replace(/ /g,"%20")+" "+this.currentNews["url"];
+    this.currentNews["twitterContent"]=this.currentNews["title"].replace(/\%/g,"%25").replace(/ /g,"%20")+" "+this.currentNews["url"];
     this.modalService.open(newscontent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -205,16 +207,22 @@ export class DetailspageComponent implements OnInit {
       // alert:Alert = {type:"success",message:this.metadataObj["ticker"]+" added to Watchlist."};
       
       watchlist[this.metadataObj["ticker"]]={tickername:this.metadataObj["ticker"],name:this.metadataObj["name"]};
-      new_alert={type:"success",message:this.metadataObj["ticker"]+" added to Watchlist."}
+      new_alert={type:"success",message:this.metadataObj["ticker"]+" added to Watchlist.",starred:true}
       
     }
     else{
       if (watchlist.hasOwnProperty(this.metadataObj["ticker"])){
         delete watchlist[this.metadataObj["ticker"]];
       }
-      new_alert={type:"danger",message:this.metadataObj["ticker"]+" removed from Watchlist."};
+      new_alert={type:"danger",message:this.metadataObj["ticker"]+" removed from Watchlist.",starred:true};
     }
     localStorage.setItem("watchlist",JSON.stringify(watchlist));
+    for(var i=0;i<this.alerts.length;i++){
+      if(this.alerts[i]["starred"]==true){
+        this.alerts.splice(i,1);
+        break;
+      }
+    }
     this.alerts.unshift(new_alert);
     setTimeout(this.close.bind(this),5000,new_alert);
     console.log(watchlist);
@@ -240,19 +248,24 @@ export class DetailspageComponent implements OnInit {
       this.metadataObj=data;
       if(this.metadataObj["detail"]=="Not found." || this.tickername==""){
         this.validStock=false;
-        this.alerts.unshift({type:"danger",message:"No results found. Please enter valid Ticker"});
+        this.alerts.unshift({type:"danger",message:"No results found. Please enter valid Ticker",starred:false});
         this.dataReady=true;
         return;
       }
       else{
         this.validStock=true;
       }
-      if (JSON.parse(localStorage.getItem("watchlist"))[this.metadataObj["ticker"]]){
-        this.isStarred=true;
+      try {
+        if (JSON.parse(localStorage.getItem("watchlist"))[this.metadataObj["ticker"]]){
+          this.isStarred=true;
+        }
+        else{
+          this.isStarred=false;
+        }
+      } catch (error) {
+        
       }
-      else{
-        this.isStarred=false;
-      }
+     
     });
    
     // this.dailypriceObj=this._autocompservice.getDailyPrice(this.tickername).subscribe(data=>{
@@ -305,7 +318,9 @@ export class DetailspageComponent implements OnInit {
         this.marketOpen=false;
       }
       // this.DailyHighcharts.
-      this.refreshChart();
+      
+        this.refreshChart();
+      
       this.dataReady=true;
       console.log("1");
       this.replaceNullWithDashes();// to remove null elements with dashes
@@ -457,7 +472,16 @@ export class DetailspageComponent implements OnInit {
 });
 
 
-    this._autocompservice.getNewsData(this.tickername).subscribe(data=>{this.newsDataObject=data;});
+    this._autocompservice.getNewsData(this.tickername).subscribe(data=>{
+      // this.newsDataObject=data;
+      var articles=data;
+      for(var i=0;i<Object.keys(articles).length;i++){
+        if (articles[i].title != null && articles[i].urlToImage != null && articles[i].title != '' && articles[i].urlToImage != '') {
+          this.newsDataObject.push(articles[i]);
+          
+        }
+      }
+   });
     
     
   }
